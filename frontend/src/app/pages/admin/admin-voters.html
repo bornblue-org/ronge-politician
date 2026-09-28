@@ -4,9 +4,17 @@
     <p>Search the voter roll or upload a new PDF.</p>
   </div>
   <div class="admin-toolbar-actions">
+    <button class="admin-btn admin-btn-secondary" type="button" (click)="openBulkUpload()">
+      <i class="fa-solid fa-layer-group"></i>
+      Bulk upload PDFs
+    </button>
     <button class="admin-btn admin-btn-primary" type="button" (click)="openUpload()">
       <i class="fa-solid fa-file-arrow-up"></i>
       Upload PDF
+    </button>
+    <button class="admin-btn admin-btn-danger" type="button" (click)="openDeleteAll()">
+      <i class="fa-solid fa-trash"></i>
+      Delete all
     </button>
   </div>
 </div>
@@ -41,10 +49,11 @@
           <th>Gender / Age</th>
           <th>Institute</th>
           <th>EPIC</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        @for (row of result().items; track row.district + row.part + row.serial + row.name) {
+        @for (row of result().items; track row.id) {
           <tr>
             <td class="admin-cell-muted">{{ row.serial }}</td>
             <td class="admin-cell-primary">{{ row.name }}</td>
@@ -53,6 +62,23 @@
             <td class="admin-cell-muted">{{ row.gender }} {{ row.age }}</td>
             <td class="admin-cell-muted">{{ row.institute }}</td>
             <td class="admin-cell-muted">{{ row.epicNo || '—' }}</td>
+            <td>
+              <div class="admin-row-actions">
+                <button
+                  type="button"
+                  class="admin-icon-btn admin-icon-btn-danger"
+                  [disabled]="deletingId() === row.id"
+                  (click)="deleteVoter(row)"
+                  aria-label="Delete voter"
+                >
+                  @if (deletingId() === row.id) {
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                  } @else {
+                    <i class="fa-solid fa-trash"></i>
+                  }
+                </button>
+              </div>
+            </td>
           </tr>
         }
       </tbody>
@@ -182,6 +208,173 @@
             }
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+}
+
+@if (bulkOpen()) {
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="bulk-upload-title">
+    <div class="admin-modal-card admin-modal-card-sm">
+      <div class="admin-modal-head">
+        <h2 id="bulk-upload-title">Bulk upload election rolls</h2>
+        <button type="button" class="admin-icon-btn" (click)="closeBulkUpload()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="admin-note">Select all the PDFs you want to upload at once. Each will be parsed and checked for duplicates before anything is saved.</p>
+
+      <label
+        class="admin-drop-area"
+        [class.is-dragover]="bulkDragActive()"
+        [class.has-file]="bulkFiles().length > 0"
+        (dragover)="onBulkDragOver($event)"
+        (dragleave)="onBulkDragLeave()"
+        (drop)="onBulkDrop($event)"
+      >
+        <input type="file" accept="application/pdf,.pdf" multiple (change)="onBulkFileInput($event)" hidden />
+        <span class="admin-drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+        <strong>Drag and drop PDFs here</strong>
+        <span class="admin-drop-hint">or click to browse — you can select many at once</span>
+      </label>
+
+      @if (bulkFiles().length > 0) {
+        <div class="admin-surface admin-surface-scroll" style="max-height: 240px;">
+          <table class="admin-grid-table">
+            <tbody>
+              @for (file of bulkFiles(); track file.name + $index) {
+                <tr>
+                  <td class="admin-cell-primary">{{ file.name }}</td>
+                  <td>
+                    <button type="button" class="admin-icon-btn admin-icon-btn-danger" (click)="removeBulkFile($index)" aria-label="Remove file">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="admin-note">{{ bulkFiles().length }} file(s) selected.</p>
+      }
+
+      <div class="admin-modal-actions">
+        <button class="admin-btn admin-btn-ghost admin-btn-sm" type="button" (click)="closeBulkUpload()">Cancel</button>
+        <button class="admin-btn admin-btn-primary" type="button" [disabled]="bulkFiles().length === 0 || bulkUploading()" (click)="submitBulkUpload()">
+          @if (bulkUploading()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          } @else {
+            <i class="fa-solid fa-upload"></i>
+          }
+          {{ bulkUploading() ? 'Processing PDFs…' : 'Upload and review' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (bulkUploading()) {
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="bulk-progress-title">
+    <div class="admin-modal-card admin-modal-card-sm">
+      <h2 id="bulk-progress-title">Processing PDFs…</h2>
+      <p class="admin-note">{{ bulkProgress().done }} of {{ bulkProgress().total }} files processed</p>
+      <div class="admin-progress-track">
+        <div class="admin-progress-fill" [style.width.%]="bulkProgress().total ? (bulkProgress().done / bulkProgress().total) * 100 : 0"></div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (bulkFileRows(); as rows) {
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="bulk-preview-title">
+    <div class="admin-modal-card">
+      <h2 id="bulk-preview-title">Review bulk upload</h2>
+      <p class="admin-note">
+        {{ bulkTotals().included }} file(s) included · {{ bulkTotals().new }} new voters · {{ bulkTotals().duplicate }} duplicates will be skipped
+      </p>
+      <div class="admin-modal-actions">
+        <button class="admin-btn admin-btn-ghost admin-btn-sm" type="button" (click)="closeBulkPreview()">Cancel</button>
+        <button class="admin-btn admin-btn-primary" type="button" [disabled]="bulkSaving() || bulkTotals().included === 0" (click)="saveBulk()">
+          @if (bulkSaving()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          }
+          {{ bulkSaving() ? 'Saving…' : 'Save included files' }}
+        </button>
+      </div>
+      <div class="admin-surface admin-surface-scroll">
+        <table class="admin-grid-table">
+          <thead>
+            <tr>
+              <th>Include</th>
+              <th>File</th>
+              <th>Rows</th>
+              <th>New</th>
+              <th>Duplicates</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows; track row.batchId + '::' + row.filename) {
+              <tr>
+                <td>
+                  @if (!row.error) {
+                    <input type="checkbox" [checked]="isBulkFileIncluded(row)" (change)="toggleBulkFile(row)" />
+                  }
+                </td>
+                <td class="admin-cell-primary">{{ row.filename }}</td>
+                <td class="admin-cell-muted">{{ row.totalRows }}</td>
+                <td class="admin-cell-muted">{{ row.newCount }}</td>
+                <td class="admin-cell-muted">{{ row.duplicateCount }}</td>
+                <td>
+                  @if (row.error) {
+                    <span class="admin-status admin-status-danger" [title]="row.error">Failed to parse</span>
+                  } @else {
+                    <span class="admin-status admin-status-success">Ready</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+@if (deleteAllOpen()) {
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="delete-all-title">
+    <div class="admin-modal-card admin-modal-card-sm">
+      <div class="admin-modal-head">
+        <h2 id="delete-all-title">Delete all voters</h2>
+        <button type="button" class="admin-icon-btn" (click)="closeDeleteAll()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="admin-note">
+        This permanently deletes all {{ result().total }} voters from the database. This cannot be undone.
+        Type <strong>DELETE</strong> below to confirm.
+      </p>
+      <input
+        name="deleteAllConfirm"
+        placeholder="Type DELETE to confirm"
+        [ngModel]="deleteAllConfirmText()"
+        (ngModelChange)="deleteAllConfirmText.set($event)"
+      />
+      <div class="admin-modal-actions">
+        <button class="admin-btn admin-btn-ghost admin-btn-sm" type="button" (click)="closeDeleteAll()">Cancel</button>
+        <button
+          class="admin-btn admin-btn-danger"
+          type="button"
+          [disabled]="deletingAll() || deleteAllConfirmText().trim().toUpperCase() !== 'DELETE'"
+          (click)="confirmDeleteAll()"
+        >
+          @if (deletingAll()) {
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          } @else {
+            <i class="fa-solid fa-trash"></i>
+          }
+          {{ deletingAll() ? 'Deleting…' : 'Delete everything' }}
+        </button>
       </div>
     </div>
   </div>

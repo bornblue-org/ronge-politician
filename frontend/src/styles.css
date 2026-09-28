@@ -1363,6 +1363,20 @@ textarea { min-height: 130px; resize: vertical; }
 .admin-status-warning { background: var(--adm-warning-bg); color: var(--adm-warning); }
 .admin-status-danger { background: var(--adm-danger-bg); color: var(--adm-danger); }
 .admin-status-info { background: var(--adm-info-bg); color: var(--adm-info); }
+.admin-progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--adm-primary-100);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.admin-progress-fill {
+  height: 100%;
+  background: var(--adm-primary);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
 .admin-row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .admin-icon-btn {
   width: 30px;

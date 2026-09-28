@@ -3,11 +3,16 @@ package com.ronge.voter;
 import com.ronge.news.NewsRepository;
 import com.ronge.problem.TeacherProblemRepository;
 import com.ronge.voter.VoterService.AdminVoterPage;
+import com.ronge.voter.VoterService.BulkPreview;
+import com.ronge.voter.VoterService.BulkSaveRequest;
+import com.ronge.voter.VoterService.BulkSaveResult;
 import com.ronge.voter.VoterService.Preview;
 import com.ronge.voter.VoterService.PreviewRow;
 import com.ronge.voter.VoterService.SaveResult;
 import com.ronge.voter.VoterService.VoterSearch;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +59,16 @@ public class VoterController {
     return voters.save(rows);
   }
 
+  @PostMapping("/admin/voters/bulk-preview")
+  BulkPreview bulkPreview(@RequestParam("files") List<MultipartFile> files) throws IOException {
+    return voters.bulkPreview(files);
+  }
+
+  @PostMapping("/admin/voters/bulk-save")
+  BulkSaveResult bulkSave(@RequestBody BulkSaveRequest request) {
+    return voters.bulkSave(request.batches());
+  }
+
   @GetMapping("/admin/voters")
   AdminVoterPage list(
       @RequestParam(required = false) String name,
@@ -63,6 +78,16 @@ public class VoterController {
       @RequestParam(defaultValue = "25") int pageSize
   ) {
     return voters.searchAdmin(name, district, part, page, pageSize);
+  }
+
+  @DeleteMapping("/admin/voters/{id}")
+  void delete(@PathVariable Long id) {
+    voters.delete(id);
+  }
+
+  @DeleteMapping("/admin/voters")
+  void deleteAll() {
+    voters.deleteAll();
   }
 
   @GetMapping("/admin/summary")
