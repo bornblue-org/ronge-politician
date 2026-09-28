@@ -81,7 +81,7 @@ public class VoterService {
     try {
       voters.saveAll(toSave);
     } catch (DataIntegrityViolationException ex) {
-      throw new IllegalArgumentException("Could not save these rows due to a conflicting district, part, and serial number.");
+      throw new IllegalArgumentException(saveErrorMessage(ex));
     }
     return new SaveResult(toSave.size() - updated, updated, skipped);
   }
@@ -183,7 +183,7 @@ public class VoterService {
     try {
       voters.saveAll(toSave);
     } catch (DataIntegrityViolationException ex) {
-      throw new IllegalArgumentException("Could not save this batch due to a conflicting district, part, and serial number.");
+      throw new IllegalArgumentException(saveErrorMessage(ex));
     }
     return new BulkSaveResult(toSave.size() - updated, updated, skipped, failedFiles);
   }
@@ -257,30 +257,30 @@ public class VoterService {
   }
 
   private static void applyFields(Voter voter, PreviewRow row, String code) {
-    voter.setDistrict(row.district());
-    voter.setPartNo(row.part());
+    voter.setDistrict(sanitize(row.district()));
+    voter.setPartNo(sanitize(row.part()));
     voter.setSerialNo(row.serial());
-    voter.setName(row.name());
-    voter.setRelativeName(row.relativeName());
-    voter.setAddress(row.address());
-    voter.setInstitute(row.institute());
+    voter.setName(sanitize(row.name()));
+    voter.setRelativeName(sanitize(row.relativeName()));
+    voter.setAddress(sanitize(row.address()));
+    voter.setInstitute(sanitize(row.institute()));
     voter.setAge(row.age());
-    voter.setGender(row.gender());
-    voter.setEpicNo(row.epicNo());
+    voter.setGender(sanitize(row.gender()));
+    voter.setEpicNo(sanitize(row.epicNo()));
     voter.setRowHash(code);
   }
 
   private static void applyFields(Voter voter, ParsedVoter row, String code) {
-    voter.setDistrict(row.district());
-    voter.setPartNo(row.part());
+    voter.setDistrict(sanitize(row.district()));
+    voter.setPartNo(sanitize(row.part()));
     voter.setSerialNo(row.serial());
-    voter.setName(row.name());
-    voter.setRelativeName(row.relativeName());
-    voter.setAddress(row.address());
-    voter.setInstitute(row.institute());
+    voter.setName(sanitize(row.name()));
+    voter.setRelativeName(sanitize(row.relativeName()));
+    voter.setAddress(sanitize(row.address()));
+    voter.setInstitute(sanitize(row.institute()));
     voter.setAge(row.age());
-    voter.setGender(row.gender());
-    voter.setEpicNo(row.epicNo());
+    voter.setGender(sanitize(row.gender()));
+    voter.setEpicNo(sanitize(row.epicNo()));
     voter.setRowHash(code);
   }
 
@@ -310,6 +310,25 @@ public class VoterService {
       }
     }
     return result;
+  }
+
+  private static String saveErrorMessage(DataIntegrityViolationException ex) {
+    Throwable cause = ex;
+    while (cause.getCause() != null && cause.getCause() != cause) {
+      cause = cause.getCause();
+    }
+    String rootMessage = cause.getMessage() == null ? "" : cause.getMessage();
+    if (rootMessage.contains("voter_part_serial")) {
+      return "Could not save: a row conflicts with an existing district, part, and serial number.";
+    }
+    if (rootMessage.toLowerCase(java.util.Locale.ROOT).contains("invalid byte sequence")) {
+      return "Could not save: one of the PDFs contains an unsupported character. Try re-exporting or re-scanning that file.";
+    }
+    return "Could not save this batch: " + rootMessage;
+  }
+
+  private static String sanitize(String value) {
+    return value == null ? null : value.replace("\u0000", "");
   }
 
   private static String groupKey(String district, String part) {

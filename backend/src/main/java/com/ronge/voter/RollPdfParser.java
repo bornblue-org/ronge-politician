@@ -187,7 +187,7 @@ public class RollPdfParser {
     if (value == null) {
       return "";
     }
-    return value.replaceAll("\\s+", " ").trim();
+    return value.replace("\u0000", "").replaceAll("\\s+", " ").trim();
   }
 
   private List<Line> lines(List<Word> words) {
