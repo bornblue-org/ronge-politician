@@ -13,7 +13,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,24 +59,31 @@ public class VoterService {
     for (PreviewRow row : rows) {
       hashes.add(hash(row));
     }
-    Set<String> existing = existingHashes(hashes);
-    Set<String> accepted = new HashSet<>();
-    List<Voter> entities = new ArrayList<>();
+    Set<String> existingHash = existingHashes(hashes);
+    Map<String, Voter> existingByKey = findExistingByKeyForPreview(rows);
+    Set<String> acceptedHashes = new HashSet<>();
+    Map<String, Voter> keyToEntity = new LinkedHashMap<>();
     int skipped = 0;
     for (int index = 0; index < rows.size(); index++) {
-      String code = hashes.get(index);
-      if (existing.contains(code) || !accepted.add(code)) {
+      PreviewRow row = rows.get(index);
+      String hash = hashes.get(index);
+      if (existingHash.contains(hash) || !acceptedHashes.add(hash)) {
         skipped++;
         continue;
       }
-      entities.add(entity(rows.get(index), code));
+      String key = rowKey(row.district(), row.part(), row.serial());
+      Voter target = keyToEntity.getOrDefault(key, existingByKey.getOrDefault(key, new Voter()));
+      applyFields(target, row, hash);
+      keyToEntity.put(key, target);
     }
+    List<Voter> toSave = new ArrayList<>(keyToEntity.values());
+    int updated = (int) toSave.stream().filter(voter -> voter.getId() != null).count();
     try {
-      voters.saveAll(entities);
+      voters.saveAll(toSave);
     } catch (DataIntegrityViolationException ex) {
-      throw new IllegalArgumentException("A row with the same district, part, and serial is already stored with different details.");
+      throw new IllegalArgumentException("Could not save these rows due to a conflicting district, part, and serial number.");
     }
-    return new SaveResult(entities.size(), skipped);
+    return new SaveResult(toSave.size() - updated, updated, skipped);
   }
 
   @Transactional
@@ -152,24 +161,31 @@ public class VoterService {
       }
     }
 
-    Set<String> existing = existingHashes(hashes);
-    Set<String> accepted = new HashSet<>();
-    List<Voter> entities = new ArrayList<>();
+    Set<String> existingHash = existingHashes(hashes);
+    Map<String, Voter> existingByKey = findExistingByKeyForParsed(rows);
+    Set<String> acceptedHashes = new HashSet<>();
+    Map<String, Voter> keyToEntity = new LinkedHashMap<>();
     int skipped = 0;
     for (int index = 0; index < rows.size(); index++) {
+      ParsedVoter row = rows.get(index);
       String hash = hashes.get(index);
-      if (existing.contains(hash) || !accepted.add(hash)) {
+      if (existingHash.contains(hash) || !acceptedHashes.add(hash)) {
         skipped++;
         continue;
       }
-      entities.add(entity(rows.get(index), hash));
+      String key = rowKey(row.district(), row.part(), row.serial());
+      Voter target = keyToEntity.getOrDefault(key, existingByKey.getOrDefault(key, new Voter()));
+      applyFields(target, row, hash);
+      keyToEntity.put(key, target);
     }
+    List<Voter> toSave = new ArrayList<>(keyToEntity.values());
+    int updated = (int) toSave.stream().filter(voter -> voter.getId() != null).count();
     try {
-      voters.saveAll(entities);
+      voters.saveAll(toSave);
     } catch (DataIntegrityViolationException ex) {
-      throw new IllegalArgumentException("Some rows conflict with existing data (same district, part, and serial with different details).");
+      throw new IllegalArgumentException("Could not save this batch due to a conflicting district, part, and serial number.");
     }
-    return new BulkSaveResult(entities.size(), skipped, failedFiles);
+    return new BulkSaveResult(toSave.size() - updated, updated, skipped, failedFiles);
   }
 
   private void evictStaleBatches() {
@@ -240,8 +256,7 @@ public class VoterService {
     return VoterHash.of(row.name(), row.relativeName(), row.address(), row.institute(), row.age(), row.gender(), row.epicNo(), row.district(), row.part(), row.serial());
   }
 
-  private static Voter entity(PreviewRow row, String code) {
-    Voter voter = new Voter();
+  private static void applyFields(Voter voter, PreviewRow row, String code) {
     voter.setDistrict(row.district());
     voter.setPartNo(row.part());
     voter.setSerialNo(row.serial());
@@ -253,11 +268,9 @@ public class VoterService {
     voter.setGender(row.gender());
     voter.setEpicNo(row.epicNo());
     voter.setRowHash(code);
-    return voter;
   }
 
-  private static Voter entity(ParsedVoter row, String code) {
-    Voter voter = new Voter();
+  private static void applyFields(Voter voter, ParsedVoter row, String code) {
     voter.setDistrict(row.district());
     voter.setPartNo(row.part());
     voter.setSerialNo(row.serial());
@@ -269,7 +282,42 @@ public class VoterService {
     voter.setGender(row.gender());
     voter.setEpicNo(row.epicNo());
     voter.setRowHash(code);
-    return voter;
+  }
+
+  private Map<String, Voter> findExistingByKeyForPreview(List<PreviewRow> rows) {
+    Map<String, List<Integer>> serialsByGroup = new HashMap<>();
+    for (PreviewRow row : rows) {
+      serialsByGroup.computeIfAbsent(groupKey(row.district(), row.part()), key -> new ArrayList<>()).add(row.serial());
+    }
+    return fetchExistingByKey(serialsByGroup);
+  }
+
+  private Map<String, Voter> findExistingByKeyForParsed(List<ParsedVoter> rows) {
+    Map<String, List<Integer>> serialsByGroup = new HashMap<>();
+    for (ParsedVoter row : rows) {
+      serialsByGroup.computeIfAbsent(groupKey(row.district(), row.part()), key -> new ArrayList<>()).add(row.serial());
+    }
+    return fetchExistingByKey(serialsByGroup);
+  }
+
+  private Map<String, Voter> fetchExistingByKey(Map<String, List<Integer>> serialsByGroup) {
+    Map<String, Voter> result = new HashMap<>();
+    for (Map.Entry<String, List<Integer>> entry : serialsByGroup.entrySet()) {
+      String[] parts = entry.getKey().split("\u001f", -1);
+      List<Voter> existing = voters.findByDistrictAndPartAndSerialIn(parts[0], parts[1], entry.getValue());
+      for (Voter voter : existing) {
+        result.put(rowKey(voter.getDistrict(), voter.getPartNo(), voter.getSerialNo()), voter);
+      }
+    }
+    return result;
+  }
+
+  private static String groupKey(String district, String part) {
+    return district + "\u001f" + part;
+  }
+
+  private static String rowKey(String district, String part, int serial) {
+    return district + "\u001f" + part + "\u001f" + serial;
   }
 
   private String blankToNull(String value) {
@@ -302,7 +350,7 @@ public class VoterService {
 
   public record Preview(List<PreviewRow> rows, long duplicateCount, long newCount) {}
 
-  public record SaveResult(int saved, int skipped) {}
+  public record SaveResult(int saved, int updated, int skipped) {}
 
   public record PublicVoter(
       String name, String relativeName, String district, String part, String serial, String institute, String address
@@ -338,7 +386,7 @@ public class VoterService {
 
   public record BulkSaveRequest(List<BulkSaveBatch> batches) {}
 
-  public record BulkSaveResult(int saved, int skipped, List<String> failedFiles) {}
+  public record BulkSaveResult(int saved, int updated, int skipped, List<String> failedFiles) {}
 
   private static final class BulkFile {
     final String filename;

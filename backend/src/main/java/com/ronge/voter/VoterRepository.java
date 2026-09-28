@@ -13,6 +13,12 @@ public interface VoterRepository extends JpaRepository<Voter, Long> {
   @Query("select v.rowHash from Voter v where v.rowHash in :hashes")
   List<String> findExistingHashes(@Param("hashes") Collection<String> hashes);
 
+  @Query("select v from Voter v where v.district = :district and v.partNo = :part and v.serialNo in :serials")
+  List<Voter> findByDistrictAndPartAndSerialIn(
+      @Param("district") String district,
+      @Param("part") String part,
+      @Param("serials") Collection<Integer> serials);
+
   @Query("""
       select v from Voter v
       where (:district is null or v.district = :district)

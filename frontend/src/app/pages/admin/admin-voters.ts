@@ -62,6 +62,7 @@ interface BulkPreview {
 
 interface BulkSaveResult {
   saved: number;
+  updated: number;
   skipped: number;
   failedFiles: string[];
 }
@@ -225,11 +226,12 @@ export class AdminVoters {
       return;
     }
     this.saving.set(true);
-    this.http.post<{ saved: number; skipped: number }>('/api/admin/voters', rows).subscribe({
+    this.http.post<{ saved: number; updated: number; skipped: number }>('/api/admin/voters', rows).subscribe({
       next: (result) => {
         this.saving.set(false);
         this.preview.set(null);
-        this.toast.success(`Saved ${result.saved}. Skipped ${result.skipped} exact copies.`);
+        const updatedNote = result.updated > 0 ? ` Updated ${result.updated} existing.` : '';
+        this.toast.success(`Saved ${result.saved} new.${updatedNote} Skipped ${result.skipped} exact copies.`);
         this.load(1);
       },
       error: (err) => {
@@ -419,8 +421,9 @@ export class AdminVoters {
       next: (result) => {
         this.bulkSaving.set(false);
         this.closeBulkPreview();
+        const updatedNote = result.updated > 0 ? ` Updated ${result.updated} existing.` : '';
         const failedNote = result.failedFiles.length > 0 ? ` ${result.failedFiles.length} file(s) failed to parse.` : '';
-        this.toast.success(`Saved ${result.saved} voters. Skipped ${result.skipped} duplicates.${failedNote}`);
+        this.toast.success(`Saved ${result.saved} new voters.${updatedNote} Skipped ${result.skipped} duplicates.${failedNote}`);
         this.load(1);
       },
       error: (err) => {
