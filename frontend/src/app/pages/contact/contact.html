@@ -1,0 +1,51 @@
+<section class="wrap section contact-page">
+  <div>
+    <p class="eyebrow">{{ lang.t(profile.constituency) }}</p>
+    <h2>{{ lang.lang() === 'mr' ? 'संपर्क' : 'Contact' }}</h2>
+    <p class="about-lead">{{ lang.t(profile.name) }}</p>
+    <div class="contact-lines">
+      <p class="with-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ lang.t(profile.address) }}</p>
+      <a class="with-icon" [href]="'tel:' + profile.phone"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ profile.phoneDisplay }}</a>
+      <a class="with-icon" [href]="'mailto:' + profile.email"><i class="fa-solid fa-envelope" aria-hidden="true"></i>{{ profile.email }}</a>
+      <a class="with-icon contact-wa" [href]="profile.whatsapp" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i>WhatsApp</a>
+    </div>
+  </div>
+  <form class="contact-form" (submit)="submit($event)" novalidate>
+    <label for="name">{{ lang.lang() === 'mr' ? 'नाव' : 'Name' }}</label>
+    <input id="name" name="name" required [(ngModel)]="name" [class.invalid]="errors().name" [placeholder]="lang.lang() === 'mr' ? 'उदा. सुनील रामराव पाटील' : 'e.g. Sunil Ramrao Patil'" />
+    @if (errors().name) {
+      <p class="field-error">{{ errors().name }}</p>
+    }
+    <label for="phone">{{ lang.lang() === 'mr' ? 'फोन' : 'Phone' }}</label>
+    <input id="phone" name="phone" type="tel" inputmode="numeric" maxlength="10" required [(ngModel)]="phone" placeholder="9876543210" [class.invalid]="errors().phone" />
+    @if (errors().phone) {
+      <p class="field-error">{{ errors().phone }}</p>
+    }
+    <div class="contact-pair">
+      <div>
+        <label for="email">{{ lang.lang() === 'mr' ? 'ईमेल' : 'Email' }}</label>
+        <input id="email" name="email" type="email" [(ngModel)]="email" placeholder="you@example.com" [class.invalid]="errors().email" />
+        @if (errors().email) {
+          <p class="field-error">{{ errors().email }}</p>
+        }
+      </div>
+      <div>
+        <label for="area">{{ lang.lang() === 'mr' ? 'गाव / जिल्हा' : 'Village / district' }}</label>
+        <input id="area" name="area" [(ngModel)]="area" [placeholder]="lang.lang() === 'mr' ? 'उदा. पंढरपूर, सोलापूर' : 'e.g. Pandharpur, Solapur'" />
+      </div>
+    </div>
+    <label for="message">{{ lang.lang() === 'mr' ? 'विषय' : 'Message' }}</label>
+    <textarea
+      id="message"
+      name="message"
+      required
+      [(ngModel)]="message"
+      [class.invalid]="errors().message"
+      [placeholder]="lang.lang() === 'mr' ? 'तुमचा संदेश येथे लिहा…' : 'Write your message here…'"
+    ></textarea>
+    @if (errors().message) {
+      <p class="field-error">{{ errors().message }}</p>
+    }
+    <button class="btn btn-primary" type="submit">{{ lang.lang() === 'mr' ? 'ईमेलने पाठवा' : 'Send by email' }}</button>
+  </form>
+</section>

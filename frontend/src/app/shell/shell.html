@@ -1,0 +1,100 @@
+<header class="site-header">
+  <div class="utility">
+    <div class="utility-inner">
+      <p class="utility-place">
+        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        <span>{{ lang.t(profile.constituency) }}</span>
+      </p>
+      <div class="utility-actions">
+        <a class="util-link" [href]="'tel:' + profile.phone">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          <span>{{ profile.phoneDisplay }}</span>
+        </a>
+        <a class="util-wa" [href]="profile.whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+        </a>
+        <a class="util-fb" [href]="profile.facebook" target="_blank" rel="noopener" aria-label="Facebook">
+          <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+        </a>
+        <a class="util-ig" [href]="profile.instagram" target="_blank" rel="noopener" aria-label="Instagram">
+          <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+        </a>
+        <div class="lang-switch" role="group" [attr.aria-label]="lang.lang() === 'mr' ? 'भाषा' : 'Language'">
+          <button type="button" [class.active]="lang.lang() === 'mr'" (click)="setLang('mr')">मराठी</button>
+          <button type="button" [class.active]="lang.lang() === 'en'" (click)="setLang('en')">EN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-bar">
+    <a class="brand" routerLink="/">
+      <img [src]="profile.portrait" [alt]="lang.t(profile.name)" />
+      <div>
+        <h1>{{ lang.t(profile.name) }}</h1>
+      </div>
+    </a>
+    <button class="menu-btn" type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-label]="lang.lang() === 'mr' ? 'मेनू' : 'Menu'">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+    <nav class="nav-row" [class.open]="menuOpen()">
+      @for (item of nav; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: !!item.exact }">
+          {{ lang.t(item.label) }}
+        </a>
+      }
+    </nav>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    @for (copy of [1, 2, 3, 4]; track copy) {
+      <span class="marquee-set">
+        <span>{{ lang.t(profile.slogan) }}</span>
+        <span>{{ lang.t(profile.constituency) }} · २०२६</span>
+      </span>
+    }
+  </div>
+</div>
+
+<router-outlet />
+
+<footer class="site-footer">
+  <div class="wrap footer-main">
+    <div class="footer-id">
+      <img [src]="profile.portrait" [alt]="lang.t(profile.name)" />
+      <div>
+        <p class="footer-name">{{ lang.t(profile.name) }}</p>
+        <p>{{ lang.t(profile.constituency) }}</p>
+      </div>
+    </div>
+    <div>
+      <p class="footer-label">{{ lang.lang() === 'mr' ? 'द्रुत दुवे' : 'Quick links' }}</p>
+      <nav class="footer-links" [attr.aria-label]="lang.lang() === 'mr' ? 'द्रुत दुवे' : 'Quick links'">
+        @for (item of nav; track item.path) {
+          <a [routerLink]="item.path">{{ lang.t(item.label) }}</a>
+        }
+      </nav>
+    </div>
+    <div class="footer-contact">
+      <p class="footer-label">{{ lang.lang() === 'mr' ? 'संपर्क' : 'Contact' }}</p>
+      <a [href]="'tel:' + profile.phone"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ profile.phoneDisplay }}</a>
+      <a [href]="'mailto:' + profile.email"><i class="fa-solid fa-envelope" aria-hidden="true"></i>{{ profile.email }}</a>
+      <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ lang.t(profile.address) }}</p>
+      <div class="footer-social">
+        <a class="util-wa" [href]="profile.whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+        </a>
+        <a class="util-fb" [href]="profile.facebook" target="_blank" rel="noopener" aria-label="Facebook">
+          <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+        </a>
+        <a class="util-ig" [href]="profile.instagram" target="_blank" rel="noopener" aria-label="Instagram">
+          <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap footer-legal">
+    <p>© २०२६ {{ lang.t(profile.name) }}</p>
+  </div>
+</footer>

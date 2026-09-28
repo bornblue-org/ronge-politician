@@ -1,0 +1,146 @@
+<div class="admin-toolbar">
+  <div class="admin-toolbar-title">
+    <h2>News</h2>
+    <p>Stories published on the public site.</p>
+  </div>
+  <div class="admin-toolbar-actions">
+    <button class="admin-btn admin-btn-primary" type="button" (click)="openAdd()">
+      <i class="fa-solid fa-plus"></i>
+      Add story
+    </button>
+  </div>
+</div>
+
+@if (result().items.length === 0) {
+  <div class="admin-surface">
+    <div class="admin-empty">
+      <span class="admin-empty-icon"><i class="fa-solid fa-newspaper"></i></span>
+      <h4>No stories yet</h4>
+      <p>Add a story with a banner, title, description, images, and date — it will appear here and on the public site.</p>
+      <button class="admin-btn admin-btn-primary" type="button" (click)="openAdd()">
+        <i class="fa-solid fa-plus"></i>
+        Add your first story
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="admin-surface admin-surface-scroll">
+    <table class="admin-grid-table">
+      <thead>
+        <tr>
+          <th>Story</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of result().items; track item.id) {
+          <tr>
+            <td>
+              <div class="admin-cell-media">
+                <img [src]="item.banner" alt="" />
+                <div>
+                  <span class="admin-cell-primary">{{ item.title.mr }}</span>
+                  <span class="admin-cell-muted">{{ item.title.en }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="admin-cell-muted">{{ item.date | date: 'mediumDate' }}</td>
+            <td><span class="admin-status admin-status-success">Published</span></td>
+            <td>
+              <div class="admin-row-actions">
+                <button type="button" class="admin-icon-btn" (click)="openEdit(item)" aria-label="Edit story">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button type="button" class="admin-icon-btn admin-icon-btn-danger" (click)="remove(item.id)" aria-label="Delete story">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+@if (formOpen()) {
+  <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="story-title">
+    <div class="admin-modal-card admin-modal-card-md">
+      <div class="admin-modal-head">
+        <h2 id="story-title">{{ editingId() ? 'Edit story' : 'Add story' }}</h2>
+        <button type="button" class="admin-icon-btn" (click)="closeForm()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form class="admin-modal-form" (submit)="saveStory($event, banner, extra)">
+        <div class="admin-form-section">
+          <div class="admin-form-row admin-form-row-single">
+            <div>
+              <label for="date">Date</label>
+              <input id="date" name="date" type="date" required [(ngModel)]="date" />
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div>
+              <label for="titleMr">Title (Marathi)</label>
+              <input id="titleMr" name="titleMr" required [(ngModel)]="titleMr" />
+            </div>
+            <div>
+              <label for="titleEn">Title (English)</label>
+              <input id="titleEn" name="titleEn" required [(ngModel)]="titleEn" />
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div>
+              <label for="descriptionMr">Description (Marathi)</label>
+              <textarea id="descriptionMr" name="descriptionMr" required [(ngModel)]="descriptionMr"></textarea>
+            </div>
+            <div>
+              <label for="descriptionEn">Description (English)</label>
+              <textarea id="descriptionEn" name="descriptionEn" required [(ngModel)]="descriptionEn"></textarea>
+            </div>
+          </div>
+          <p class="admin-note">A blank line in the description starts a new paragraph. The news card shows the first three lines.</p>
+        </div>
+
+        <div class="admin-form-section">
+          <div class="admin-form-row">
+            <div>
+              <label for="banner">Banner image {{ editingId() ? '(leave empty to keep the current one)' : '' }}</label>
+              <input #banner id="banner" name="banner" type="file" accept="image/jpeg,image/png,image/webp" [required]="!editingId()" />
+            </div>
+            <div>
+              <label for="extra">More images</label>
+              <input #extra id="extra" name="extra" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+            </div>
+          </div>
+          @if (images().length) {
+            <div class="admin-thumbs">
+              @for (image of images(); track image) {
+                <figure>
+                  <img [src]="image" alt="" />
+                  <button type="button" (click)="removeImage(image)" aria-label="Remove image"><i class="fa-solid fa-xmark"></i></button>
+                </figure>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="admin-modal-actions">
+          <button class="admin-btn admin-btn-ghost admin-btn-sm" type="button" (click)="closeForm()">Cancel</button>
+          <button class="admin-btn admin-btn-primary" type="submit" [disabled]="saving()">
+            @if (saving()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            }
+            {{ saving() ? 'Saving…' : 'Save story' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

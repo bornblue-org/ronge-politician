@@ -1,0 +1,11 @@
+<section class="admin-login">
+  <form class="admin-card" (submit)="submit($event)">
+    <p class="eyebrow">Admin</p>
+    <h2>Sign in</h2>
+    <label for="username">Username</label>
+    <input id="username" name="username" required [(ngModel)]="username" />
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" required [(ngModel)]="password" />
+    <button class="admin-btn admin-btn-primary admin-btn-block" type="submit">Sign in</button>
+  </form>
+</section>

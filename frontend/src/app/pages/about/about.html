@@ -1,0 +1,40 @@
+<section class="wrap section about-intro">
+  <img class="about-photo" [src]="profile.portraitSuit" [alt]="lang.t(profile.name)" />
+  <div>
+    <h2>{{ lang.t(profile.name) }}</h2>
+    <p class="about-lead">{{ lang.t(lead) }}</p>
+    <p class="about-kicker">{{ lang.t(profile.constituency) }}</p>
+    <div class="about-contact">
+      <p class="with-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i>{{ lang.t(profile.address) }}</p>
+      <a class="with-icon" [href]="'tel:' + profile.phone"><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ profile.phoneDisplay }}</a>
+      <a class="with-icon" [href]="'mailto:' + profile.email"><i class="fa-solid fa-envelope" aria-hidden="true"></i>{{ profile.email }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section">
+  <div class="about-grid">
+    @for (block of blocks; track block.title.en) {
+      <article>
+        <h3>{{ lang.t(block.title) }}</h3>
+        <ul>
+          @for (item of block.items; track item.mr) {
+            <li>{{ lang.t(item) }}</li>
+          }
+        </ul>
+      </article>
+    }
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2>{{ lang.lang() === 'mr' ? 'पुरस्कार आणि सन्मान' : 'Awards' }}</h2>
+  <div class="about-awards">
+    @for (award of awards; track award.title.en) {
+      <p>
+        <b>{{ award.year }}</b>
+        <span>{{ lang.t(award.title) }}</span>
+      </p>
+    }
+  </div>
+</section>

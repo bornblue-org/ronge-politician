@@ -1,0 +1,165 @@
+<section class="stage">
+  <div class="stage-shade"></div>
+  <div class="wrap stage-grid">
+    <div class="stage-copy">
+      <div class="pill">{{ lang.lang() === 'mr' ? 'निवडणूक २०२६' : 'Election 2026' }}</div>
+      <p class="stage-kicker">{{ lang.t(profile.constituency) }}</p>
+      <h2>{{ lang.t(profile.name) }}</h2>
+      <p class="stage-lead">{{ lang.t(lead) }}</p>
+      <div class="actions">
+        <a class="btn btn-primary" routerLink="/voters">{{ lang.lang() === 'mr' ? 'मतदार यादी' : 'Voter list' }}</a>
+        <a class="btn btn-ghost" routerLink="/election">{{ lang.lang() === 'mr' ? 'कृती आराखडा २०२६' : 'Action plan 2026' }}</a>
+      </div>
+    </div>
+    <figure class="stage-portrait">
+      <img [src]="profile.portrait" [alt]="lang.t(profile.name)" />
+      <figcaption>
+        <strong>{{ lang.t(profile.name) }}</strong>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="voter-lookup">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>{{ lang.lang() === 'mr' ? 'आपल्या जिल्ह्याच्या मतदार यादीत नाव शोधा' : 'Find your name in your district voter list' }}</h2>
+        <p>{{ lang.lang() === 'mr' ? 'पुणे, कोल्हापूर, सांगली, सातारा व सोलापूर जिल्ह्यातील शिक्षक मतदार' : 'Teacher voters in Pune, Kolhapur, Sangli, Satara, and Solapur' }}</p>
+      </div>
+      <a class="more" routerLink="/voters">{{ lang.lang() === 'mr' ? 'यादी शोधा →' : 'Search the list →' }}</a>
+    </div>
+    <div class="voter-tiles">
+      @for (district of voterDistricts; track district.id) {
+        <a class="voter-tile" routerLink="/voters" [queryParams]="{ district: district.id }" [style.background]="district.color">
+          <img [src]="district.icon" alt="" />
+          <span>
+            <b>{{ lang.t(district.name) }}</b>
+            <small>{{ lang.lang() === 'mr' ? 'यादी पहा →' : 'Open list →' }}</small>
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="intro-band">
+  <div class="wrap intro-grid">
+    <div>
+      <h2>{{ lang.t(profile.name) }}</h2>
+      <p>{{ lang.t(lead) }}</p>
+      <p class="intro-slogan">{{ lang.t(profile.slogan) }}</p>
+    </div>
+    <div class="stat-strip">
+      @for (item of stats; track item.value) {
+        <article>
+          <b>{{ item.value }}</b>
+          <span>{{ lang.t(item.label) }}</span>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="band-cream">
+  <div class="wrap section">
+    <p class="eyebrow">{{ lang.lang() === 'mr' ? 'मतदारसंघ' : 'Constituency' }}</p>
+    <div class="section-head">
+      <h2>{{ lang.lang() === 'mr' ? 'पाच जिल्हे' : 'Five districts' }}</h2>
+      <a class="more" routerLink="/election">{{ lang.lang() === 'mr' ? 'आराखडा पाहा →' : 'Read the plan →' }}</a>
+    </div>
+    <div class="sheet-grid five plain">
+      @for (district of districts; track district.id) {
+        <a class="sheet" routerLink="/election">
+          <div class="sheet-body">
+            <h3>{{ lang.t(district.name) }}</h3>
+            <p>{{ lang.t(district.note) }}</p>
+            <em>{{ lang.lang() === 'mr' ? 'आराखडा →' : 'Plan →' }}</em>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="band-white">
+  <div class="wrap section">
+    <p class="eyebrow">२०२६</p>
+    <div class="section-head">
+      <h2>{{ lang.lang() === 'mr' ? 'प्रमुख मुद्दे' : 'Key points' }}</h2>
+      <a class="more" routerLink="/election">{{ lang.lang() === 'mr' ? 'सर्व मुद्दे →' : 'All points →' }}</a>
+    </div>
+    <div class="sheet-grid three">
+      @for (point of points; track point.id; let i = $index) {
+        <a class="sheet" [routerLink]="'/election'" [fragment]="point.id">
+          <div class="sheet-body">
+            <span class="issue-no">{{ i + 1 }}</span>
+            <h3>{{ lang.t(point.title) }}</h3>
+            @if (point.lead) {
+              <p>{{ lang.t(point.lead) }}</p>
+            }
+            <em>{{ lang.lang() === 'mr' ? 'अधिक वाचा →' : 'Read more →' }}</em>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="problem-call">
+  <div class="wrap">
+    <div>
+      <p>{{ lang.lang() === 'mr' ? 'शिक्षकांसाठी' : 'For teachers' }}</p>
+      <h2>{{ lang.lang() === 'mr' ? 'समस्या नोंदणी' : 'Register a problem' }}</h2>
+    </div>
+    <a class="btn btn-primary" routerLink="/problems">{{ lang.lang() === 'mr' ? 'समस्या नोंदवा →' : 'Register a problem →' }}</a>
+  </div>
+</section>
+
+<section class="band-cream">
+  <div class="wrap section">
+    <div class="section-head">
+      <h2>{{ lang.lang() === 'mr' ? 'महत्त्वाच्या बातम्या' : 'News' }}</h2>
+      <a class="more" routerLink="/news">{{ lang.lang() === 'mr' ? 'अधिक पहा →' : 'See more →' }}</a>
+    </div>
+    <div class="sheet-grid three">
+      @for (item of news().items; track item.id) {
+        <a class="sheet news-card" [routerLink]="['/news', item.id]">
+          <div class="sheet-frame">
+            <img [src]="item.banner" [alt]="lang.t(item.title)" />
+          </div>
+          <div class="sheet-body">
+            <span class="sheet-date">{{ lang.formatDate(item.date) }}</span>
+            <h3>{{ lang.t(item.title) }}</h3>
+            <p>{{ lang.t(item.description) }}</p>
+            <em>{{ lang.lang() === 'mr' ? 'अधिक वाचा →' : 'Read more →' }}</em>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="band-white">
+  <div class="wrap section">
+    <div class="section-head">
+      <h2>{{ lang.lang() === 'mr' ? 'छायाचित्रे' : 'Photos' }}</h2>
+      <a class="more" routerLink="/gallery">{{ lang.lang() === 'mr' ? 'अधिक पहा →' : 'See more →' }}</a>
+    </div>
+    <div class="sheet-grid two">
+      @for (album of albums; track album.id) {
+        <a class="sheet" routerLink="/gallery">
+          <div class="sheet-frame">
+            <img [src]="album.cover" [alt]="lang.t(album.title)" />
+          </div>
+          <div class="sheet-body">
+            <span class="sheet-date">{{ album.images.length }} {{ lang.lang() === 'mr' ? 'फोटो' : 'photos' }}</span>
+            <h3>{{ lang.t(album.title) }}</h3>
+            <p>{{ lang.t(album.summary) }}</p>
+            <em>{{ lang.lang() === 'mr' ? 'अधिक पहा →' : 'See more →' }}</em>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,59 @@
+<div class="admin-toolbar">
+  <div class="admin-toolbar-title">
+    <h2>Teacher problems</h2>
+    <p>Grievances submitted by teachers from the public site.</p>
+  </div>
+</div>
+
+@if (loaded() && rows().length === 0) {
+  <div class="admin-surface">
+    <div class="admin-empty">
+      <span class="admin-empty-icon"><i class="fa-solid fa-inbox"></i></span>
+      <h4>No problems submitted yet</h4>
+      <p>When a teacher submits a grievance from the public site's "Problems" form, it will show up here for review.</p>
+    </div>
+  </div>
+} @else if (rows().length > 0) {
+  <div class="admin-surface admin-surface-scroll">
+    <table class="admin-grid-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Topic</th>
+          <th>District</th>
+          <th>Phone</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr class="admin-row-clickable" [class.is-open]="openId() === row.id" (click)="toggle(row.id)">
+            <td>
+              <button type="button" class="admin-expand-btn" [class.is-open]="openId() === row.id" (click)="toggle(row.id); $event.stopPropagation()" aria-label="Toggle detail">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </td>
+            <td class="admin-cell-primary">{{ row.name }}</td>
+            <td><span class="admin-tag">{{ row.topic }}</span></td>
+            <td class="admin-cell-muted">{{ row.district }}</td>
+            <td class="admin-cell-muted">{{ row.phone }}</td>
+            <td class="admin-cell-muted">{{ row.createdAt | date: 'mediumDate' }}</td>
+          </tr>
+          @if (openId() === row.id) {
+            <tr class="admin-detail-row">
+              <td colspan="6">
+                <div class="admin-detail-body">
+                  @if (row.school) {
+                    <p><strong>School:</strong> {{ row.school }}</p>
+                  }
+                  <p>{{ row.detail }}</p>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+}

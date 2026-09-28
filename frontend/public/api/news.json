@@ -1,0 +1,44 @@
+[
+  {
+    "id": "dharna",
+    "banner": "/media/andolan/11.jpg",
+    "title": {
+      "mr": "शिक्षक समन्वय संघाचे धरणे आंदोलन",
+      "en": "Sit-in by the Teachers’ Coordination Committee"
+    },
+    "description": {
+      "mr": "पेन्शन, अनुदान आणि सुरक्षित भविष्याच्या फलकानिशी शिक्षकांनी धरणे आंदोलन केले. डॉ. रोंगे यांनी उपस्थितांना संबोधित केले.\n\nशिक्षक समन्वय संघ, महाराष्ट्र राज्य यांच्या बॅनरखाली धरणे आंदोलन झाले. मोठी गर्दी रस्त्यावर आणि इमारतीबाहेर बसली होती. फलकांवर जुनी पेन्शन, अनुदान आणि शिक्षकांच्या सुरक्षित भविष्याचा मुद्दा होता.\n\nडॉ. बी. पी. रोंगे यांनी मायक्रोफोनसह उपस्थितांना संबोधित केले. हा फोटोसंच त्या कार्यक्रमाची नोंद आहे.",
+      "en": "Teachers held a sit-in with placards on pension, grants, and a secure future. Dr. Ronge addressed the gathering.\n\nThe sit-in was held under the banner of the Teachers’ Coordination Committee, Maharashtra. A large crowd sat outside, with placards on the old pension, grants, and a secure future for teachers.\n\nDr. B. P. Ronge addressed the gathering. This set of photographs is the record of that programme."
+    },
+    "images": ["/media/andolan/01.jpg", "/media/andolan/03.jpg", "/media/andolan/11.jpg", "/media/andolan/16.jpg"],
+    "date": "2026-09-10"
+  },
+  {
+    "id": "kasegaon",
+    "banner": "/media/teachers/01.jpg",
+    "title": {
+      "mr": "केसेगाव व ग्रामीण शाळांमध्ये शिक्षकांसोबत संवाद",
+      "en": "Meetings with teachers in Kasegaon and rural schools"
+    },
+    "description": {
+      "mr": "राजारामबापू कॉलेज ऑफ फार्मसी, केसेगाव येथील सभागृह आणि ग्रामीण शाळेच्या ओसरीवर शिक्षकांशी थेट चर्चा.\n\nकेसेगाव येथील राजारामबापू कॉलेज ऑफ फार्मसीच्या सभागृहात शिक्षकांची बैठक झाली. डॉ. रोंगे व्यासपीठावर बोलले.\n\nग्रामीण शाळेच्या ओसरीवर, फळ्यासमोर बसलेल्या शिक्षकांसोबतही संवाद झाला. स्थानिक प्रश्न ऐकण्यासाठी ही भेट होती.",
+      "en": "A direct discussion with teachers at Rajarambapu College of Pharmacy, Kasegaon, and on the veranda of a rural school.\n\nTeachers met in the hall of Rajarambapu College of Pharmacy, Kasegaon, where Dr. Ronge spoke from the stage.\n\nThere was also a conversation with teachers seated on a rural school veranda. The visit was to hear local issues."
+    },
+    "images": ["/media/teachers/01.jpg", "/media/teachers/06.jpg"],
+    "date": "2026-09-18"
+  },
+  {
+    "id": "miraj",
+    "banner": "/media/teachers/09.jpg",
+    "title": {
+      "mr": "मिरज न्यू इंग्लिश स्कूलमधील शिक्षक भेट",
+      "en": "Visit to New English School, Miraj"
+    },
+    "description": {
+      "mr": "द स्पार्टन एज्युकेशन सोसायटीच्या न्यू इंग्लिश स्कूल, मिरज येथे शिक्षिका व शिक्षकांसोबत भेट.\n\nमिरज येथील न्यू इंग्लिश स्कूलमध्ये शिक्षिका व शिक्षक एकत्र आले. भेटीदरम्यान डॉ. रोंगे यांच्या कार्यक्रमाचे पत्रक हातात होते.\n\nयाच दौऱ्यात सभागृहातील बैठकीतही त्यांनी शिक्षकांना संबोधित केले.",
+      "en": "A meeting with teachers at New English School, Miraj, of the Spartan Education Society.\n\nTeachers gathered at New English School, Miraj. During the visit they held leaflets from Dr. Ronge’s programme.\n\nOn the same round of visits he also addressed teachers in a conference hall."
+    },
+    "images": ["/media/teachers/09.jpg", "/media/teachers/15.jpg"],
+    "date": "2026-09-25"
+  }
+]

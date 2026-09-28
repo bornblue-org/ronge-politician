@@ -1,0 +1,41 @@
+<section class="page-banner" style="--banner: url('/media/teachers/09.jpg')">
+  <div class="wrap">
+    <p class="stage-kicker">{{ lang.lang() === 'mr' ? 'गॅलरी' : 'Gallery' }}</p>
+    <h2>{{ lang.lang() === 'mr' ? 'छायाचित्रे व व्हिडिओ' : 'Photos & Videos' }}</h2>
+    <p>{{ lang.lang() === 'mr' ? 'आंदोलन आणि शिक्षकांसोबतच्या भेटींचे फोटो व चित्रफिती.' : 'Photos and clips from the movement and visits with teachers.' }}</p>
+  </div>
+</section>
+<section class="wrap section">
+  <div class="voter-picks gallery-tabs">
+    <button type="button" [class.active]="tab() === 'photos'" (click)="setTab('photos')">
+      <i class="fa-solid fa-images"></i>
+      {{ lang.lang() === 'mr' ? 'छायाचित्रे' : 'Photos' }}
+    </button>
+    <button type="button" [class.active]="tab() === 'videos'" (click)="setTab('videos')">
+      <i class="fa-solid fa-video"></i>
+      {{ lang.lang() === 'mr' ? 'व्हिडिओ' : 'Videos' }}
+    </button>
+  </div>
+
+  @if (tab() === 'photos') {
+    <div class="photo-grid">
+      @for (image of photos(); track image) {
+        <button type="button" (click)="active.set(image)">
+          <img [src]="image" alt="" />
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="empty">
+      <h3>{{ lang.lang() === 'mr' ? 'व्हिडिओ लवकरच' : 'Videos coming soon' }}</h3>
+      <p>{{ lang.t(videosNote) }}</p>
+    </div>
+  }
+</section>
+
+@if (active(); as photo) {
+  <div class="lightbox" (click)="active.set(null)">
+    <button type="button" (click)="active.set(null)">{{ lang.lang() === 'mr' ? 'बंद' : 'Close' }}</button>
+    <img [src]="photo" alt="" />
+  </div>
+}

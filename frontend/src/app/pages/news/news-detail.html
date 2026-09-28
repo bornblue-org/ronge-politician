@@ -1,0 +1,27 @@
+@if (state().item; as story) {
+  <section class="page-banner page-banner-short" [style.--banner]="'url(' + story.banner + ')'">
+    <div class="wrap">
+      <a class="more light" routerLink="/news">{{ lang.lang() === 'mr' ? '← बातम्या' : '← News' }}</a>
+      <h2>{{ lang.t(story.title) }}</h2>
+      <p class="date">{{ lang.formatDate(story.date) }}</p>
+    </div>
+  </section>
+  <section class="wrap section news-story">
+    @for (paragraph of paragraphs(story.description); track paragraph) {
+      <p>{{ paragraph }}</p>
+    }
+    @if (story.images.length) {
+      <div class="news-images">
+        @for (src of story.images; track src) {
+          <img [src]="src" [alt]="lang.t(story.title)" />
+        }
+      </div>
+    }
+  </section>
+} @else if (state().ready) {
+  <section class="wrap section">
+    <div class="empty">
+      <h3>{{ lang.lang() === 'mr' ? 'ही बातमी सापडली नाही.' : 'This story was not found.' }}</h3>
+    </div>
+  </section>
+}

@@ -1,0 +1,70 @@
+<section class="wrap section contact-page">
+  <div>
+    <p class="eyebrow">{{ lang.t(profile.constituency) }}</p>
+    <h2>{{ lang.lang() === 'mr' ? 'समस्या नोंदणी' : 'Register a problem' }}</h2>
+    <p class="about-lead">
+      {{ lang.lang() === 'mr'
+        ? 'शिक्षक पेन्शन, बदली, वेतन, वैद्यकीय सुविधा किंवा शाळेतील प्रश्न येथे नोंदवू शकतात. नोंद जतन झाल्यावर संदेश दिसेल.'
+        : 'Teachers can register a problem about pension, transfer, salary, medical care, or the school. A message appears when the record is saved.' }}
+    </p>
+  </div>
+  <form class="contact-form" (submit)="submit($event)" novalidate>
+    <div class="contact-pair">
+      <div>
+        <label for="name">{{ lang.lang() === 'mr' ? 'नाव' : 'Name' }}</label>
+        <input id="name" name="name" required [(ngModel)]="name" [class.invalid]="errors().name" [placeholder]="lang.lang() === 'mr' ? 'उदा. सुनील रामराव पाटील' : 'e.g. Sunil Ramrao Patil'" />
+        @if (errors().name) {
+          <p class="field-error">{{ errors().name }}</p>
+        }
+      </div>
+      <div>
+        <label for="phone">{{ lang.lang() === 'mr' ? 'फोन' : 'Phone' }}</label>
+        <input id="phone" name="phone" type="tel" inputmode="numeric" maxlength="10" required [(ngModel)]="phone" placeholder="9876543210" [class.invalid]="errors().phone" />
+        @if (errors().phone) {
+          <p class="field-error">{{ errors().phone }}</p>
+        }
+      </div>
+    </div>
+    <div class="contact-pair">
+      <div>
+        <label for="district">{{ lang.lang() === 'mr' ? 'जिल्हा' : 'District' }}</label>
+        <select id="district" name="district" required [(ngModel)]="district" [class.invalid]="errors().district">
+          <option value="" disabled>{{ lang.lang() === 'mr' ? 'जिल्हा निवडा' : 'Choose a district' }}</option>
+          @for (item of districts; track item.id) {
+            <option [value]="item.id">{{ lang.t(item.name) }}</option>
+          }
+        </select>
+        @if (errors().district) {
+          <p class="field-error">{{ errors().district }}</p>
+        }
+      </div>
+      <div>
+        <label for="school">{{ lang.lang() === 'mr' ? 'शाळा / महाविद्यालय' : 'School / college' }}</label>
+        <input id="school" name="school" [(ngModel)]="school" [placeholder]="lang.lang() === 'mr' ? 'उदा. जिल्हा परिषद प्राथमिक शाळा' : 'e.g. Zilla Parishad Primary School'" />
+      </div>
+    </div>
+    <label for="topic">{{ lang.lang() === 'mr' ? 'समस्येचा विषय' : 'Topic' }}</label>
+    <select id="topic" name="topic" required [(ngModel)]="topic" [class.invalid]="errors().topic">
+      <option value="" disabled>{{ lang.lang() === 'mr' ? 'विषय निवडा' : 'Choose a topic' }}</option>
+      @for (item of topics; track item.id) {
+        <option [value]="item.id">{{ lang.t(item.label) }}</option>
+      }
+    </select>
+    @if (errors().topic) {
+      <p class="field-error">{{ errors().topic }}</p>
+    }
+    <label for="detail">{{ lang.lang() === 'mr' ? 'समस्या' : 'Problem' }}</label>
+    <textarea
+      id="detail"
+      name="detail"
+      required
+      [(ngModel)]="detail"
+      [class.invalid]="errors().detail"
+      [placeholder]="lang.lang() === 'mr' ? 'तुमची समस्या सविस्तर लिहा — काय अडचण आहे, कधीपासून आहे, आणि तुम्हाला काय अपेक्षित आहे.' : 'Describe your problem in detail — what the issue is, since when, and what you expect.'"
+    ></textarea>
+    @if (errors().detail) {
+      <p class="field-error">{{ errors().detail }}</p>
+    }
+    <button class="btn btn-primary" type="submit">{{ lang.lang() === 'mr' ? 'समस्या नोंदवा' : 'Register the problem' }}</button>
+  </form>
+</section>

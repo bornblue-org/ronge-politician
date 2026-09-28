@@ -1,0 +1,45 @@
+<section class="page-banner" style="--banner: url('/media/andolan/16.jpg')">
+  <div class="wrap">
+    <p class="stage-kicker">{{ lang.lang() === 'mr' ? 'निवडणूक २०२६' : 'Election 2026' }}</p>
+    <h2>{{ lang.lang() === 'mr' ? 'शिक्षक प्रश्न व कृती आराखडा' : 'Teachers’ issues and action plan' }}</h2>
+    <p>{{ lang.t(intro) }}</p>
+  </div>
+</section>
+
+<section class="wrap section">
+  <div class="point-list">
+    @for (point of points; track point.id; let i = $index) {
+      <article class="point" [id]="point.id" [class.open]="openId() === point.id">
+        <button type="button" class="point-toggle" (click)="toggle(point.id)" [attr.aria-expanded]="openId() === point.id">
+          <span class="num">{{ i + 1 }}</span>
+          <span class="point-title">{{ lang.t(point.title) }}</span>
+          <i class="fa-solid" [class.fa-chevron-up]="openId() === point.id" [class.fa-chevron-down]="openId() !== point.id" aria-hidden="true"></i>
+        </button>
+        @if (openId() === point.id) {
+          @if (point.lead) {
+            <p class="point-lead">{{ lang.t(point.lead) }}</p>
+          }
+          <ul>
+            @for (item of point.items; track item.mr) {
+              <li>{{ lang.t(item) }}</li>
+            }
+          </ul>
+        }
+      </article>
+    }
+  </div>
+</section>
+
+<section class="wrap section">
+  <h2>{{ lang.lang() === 'mr' ? 'पाच जिल्ह्यांसाठी स्वतंत्र शिक्षक संवाद' : 'A separate conversation in each district' }}</h2>
+  <div class="sheet-grid three plain" style="margin-top: 14px">
+    @for (district of districts; track district.id) {
+      <article class="sheet" [id]="'d-' + district.id">
+        <div class="sheet-body">
+          <h3>{{ lang.t(district.name) }}</h3>
+          <p>{{ lang.t(district.note) }}</p>
+        </div>
+      </article>
+    }
+  </div>
+</section>

@@ -1,0 +1,37 @@
+<section class="page-banner" style="--banner: url('/media/andolan/11.jpg')">
+  <div class="wrap">
+    <p class="stage-kicker">{{ lang.lang() === 'mr' ? 'ताजे' : 'Latest' }}</p>
+    <h2>{{ lang.lang() === 'mr' ? 'महत्त्वाच्या बातम्या' : 'News' }}</h2>
+    <p>{{ lang.lang() === 'mr' ? 'शिक्षक आंदोलन, शाळा भेटी आणि संवादाची नोंद.' : 'Records of the teachers’ movement, school visits, and conversations.' }}</p>
+  </div>
+</section>
+<section class="wrap section">
+  <div class="sheet-grid three">
+    @for (item of result().items; track item.id) {
+      <a class="sheet news-card" [routerLink]="['/news', item.id]">
+        <div class="sheet-frame">
+          <img [src]="item.banner" [alt]="lang.t(item.title)" />
+        </div>
+        <div class="sheet-body">
+          <span class="sheet-date">{{ lang.formatDate(item.date) }}</span>
+          <h3>{{ lang.t(item.title) }}</h3>
+          <p>{{ lang.t(item.description) }}</p>
+          <em>{{ lang.lang() === 'mr' ? 'अधिक वाचा →' : 'Read more →' }}</em>
+        </div>
+      </a>
+    }
+  </div>
+  @if (pageCount() > 1) {
+    <nav class="pager" [attr.aria-label]="lang.lang() === 'mr' ? 'पाने' : 'Pages'">
+      <button type="button" (click)="open(page() - 1)" [disabled]="page() === 1">
+        {{ lang.lang() === 'mr' ? 'मागे' : 'Previous' }}
+      </button>
+      @for (number of pages(); track number) {
+        <button type="button" [class.active]="number === page()" (click)="open(number)">{{ number }}</button>
+      }
+      <button type="button" (click)="open(page() + 1)" [disabled]="page() === pageCount()">
+        {{ lang.lang() === 'mr' ? 'पुढे' : 'Next' }}
+      </button>
+    </nav>
+  }
+</section>

@@ -1,0 +1,44 @@
+<div class="admin-greet">
+  <div>
+    <p class="admin-date">{{ today }}</p>
+    <h2>{{ greeting }}! Admin,</h2>
+  </div>
+  <a class="admin-btn admin-btn-primary" routerLink="/admin/news">
+    <i class="fa-solid fa-plus"></i>
+    Add news
+  </a>
+</div>
+
+<div class="admin-kpis">
+  @for (row of modules(); track row.key) {
+    <a class="admin-kpi" [class]="'accent-' + row.accent" [routerLink]="row.link">
+      <div class="admin-kpi-top">
+        <span class="admin-kpi-icon"><i [class]="row.icon"></i></span>
+        <span class="admin-kpi-status"><i class="fa-solid fa-circle"></i>{{ row.status }}</span>
+      </div>
+      <div class="admin-kpi-value">
+        <b>{{ row.value }}</b>
+        <span>{{ row.unit }}</span>
+      </div>
+      <span class="admin-kpi-label">{{ row.label }}</span>
+      <span class="admin-kpi-foot">{{ row.linkLabel }}<i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+  }
+</div>
+
+<div class="admin-panel admin-panel-wide">
+  <div class="admin-panel-head">
+    <h3><i class="fa-solid fa-bolt"></i>Quick actions</h3>
+  </div>
+  <div class="admin-action-list admin-action-list-grid">
+    @for (action of quickActions; track action.label) {
+      <a [routerLink]="action.link">
+        <span class="admin-action-icon"><i [class]="action.icon"></i></span>
+        <span>
+          <strong>{{ action.label }}</strong>
+          <span>{{ action.hint }}</span>
+        </span>
+      </a>
+    }
+  </div>
+</div>

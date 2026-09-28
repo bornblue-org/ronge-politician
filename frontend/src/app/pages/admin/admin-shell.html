@@ -1,0 +1,59 @@
+<div class="admin-layout" [class.sidebar-open]="sidebarOpen()">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <img class="admin-brand-mark" [src]="profile.portrait" alt="" />
+      <div class="admin-brand-text">
+        <strong>{{ profile.name.mr }}</strong>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">
+        <i class="fa-solid fa-table-cells"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/problems" routerLinkActive="active" (click)="closeSidebar()">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>Teacher problems</span>
+      </a>
+      <a routerLink="/admin/news" routerLinkActive="active" (click)="closeSidebar()">
+        <i class="fa-solid fa-newspaper"></i>
+        <span>News</span>
+      </a>
+      <a routerLink="/admin/voters" routerLinkActive="active" (click)="closeSidebar()">
+        <i class="fa-solid fa-id-card"></i>
+        <span>Election list</span>
+      </a>
+    </nav>
+    <a class="admin-view-site" routerLink="/" target="_blank">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      <span>View public site</span>
+    </a>
+  </aside>
+
+  <button type="button" class="admin-scrim" aria-hidden="true" tabindex="-1" (click)="closeSidebar()"></button>
+
+  <div class="admin-body">
+    <header class="admin-topbar">
+      <button type="button" class="admin-menu-btn" (click)="toggleSidebar()" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <p class="admin-crumb"><span>Admin</span><i class="fa-solid fa-chevron-right"></i>{{ pageTitle() }}</p>
+      <div class="admin-topbar-actions" [class.open]="userMenuOpen()">
+        <button type="button" class="admin-avatar-btn" (click)="toggleUserMenu($event)">
+          <span class="admin-avatar"><i class="fa-solid fa-user"></i></span>
+          <span class="admin-avatar-label">Admin</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="admin-user-menu">
+          <button type="button" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Log out
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="admin-main">
+      <router-outlet />
+    </main>
+  </div>
+</div>
