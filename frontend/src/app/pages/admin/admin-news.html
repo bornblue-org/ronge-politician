@@ -30,7 +30,7 @@
         <tr>
           <th>Story</th>
           <th>Date</th>
-          <th>Status</th>
+          <th>Type</th>
           <th></th>
         </tr>
       </thead>
@@ -39,7 +39,9 @@
           <tr>
             <td>
               <div class="admin-cell-media">
-                <img [src]="item.banner" alt="" />
+                @if (item.banner) {
+                  <img [src]="item.banner" alt="" />
+                }
                 <div>
                   <span class="admin-cell-primary">{{ item.title.mr }}</span>
                   <span class="admin-cell-muted">{{ item.title.en }}</span>
@@ -47,7 +49,7 @@
               </div>
             </td>
             <td class="admin-cell-muted">{{ item.date | date: 'mediumDate' }}</td>
-            <td><span class="admin-status admin-status-success">Published</span></td>
+            <td><span class="admin-status admin-status-success">{{ item.source || (item.kind === 'link' ? 'Link' : 'Story') }}</span></td>
             <td>
               <div class="admin-row-actions">
                 <button type="button" class="admin-icon-btn" (click)="openEdit(item)" aria-label="Edit story">
@@ -77,12 +79,29 @@
 
       <form class="admin-modal-form" (submit)="saveStory($event, banner, extra)">
         <div class="admin-form-section">
-          <div class="admin-form-row admin-form-row-single">
+          <div class="admin-form-row">
+            <div>
+              <label for="kind">Type</label>
+              <select id="kind" name="kind" [(ngModel)]="kind" [disabled]="!!editingId()">
+                <option value="story">Story (photos and text)</option>
+                <option value="link">Link (Facebook post or news website)</option>
+                <option value="video">Video (YouTube link)</option>
+              </select>
+            </div>
             <div>
               <label for="date">Date</label>
               <input id="date" name="date" type="date" required [(ngModel)]="date" />
             </div>
           </div>
+
+          @if (kind !== 'story') {
+            <div class="admin-form-row admin-form-row-single">
+              <div>
+                <label for="link">{{ kind === 'video' ? 'YouTube link' : 'Link (Facebook, Times of India, or any page)' }}</label>
+                <input id="link" name="link" type="url" required placeholder="https://" [(ngModel)]="link" />
+              </div>
+            </div>
+          }
 
           <div class="admin-form-row">
             <div>
@@ -97,12 +116,12 @@
 
           <div class="admin-form-row">
             <div>
-              <label for="descriptionMr">Description (Marathi)</label>
-              <textarea id="descriptionMr" name="descriptionMr" required [(ngModel)]="descriptionMr"></textarea>
+              <label for="descriptionMr">Description (Marathi){{ kind === 'story' ? '' : ' — optional' }}</label>
+              <textarea id="descriptionMr" name="descriptionMr" [required]="kind === 'story'" [(ngModel)]="descriptionMr"></textarea>
             </div>
             <div>
-              <label for="descriptionEn">Description (English)</label>
-              <textarea id="descriptionEn" name="descriptionEn" required [(ngModel)]="descriptionEn"></textarea>
+              <label for="descriptionEn">Description (English){{ kind === 'story' ? '' : ' — optional' }}</label>
+              <textarea id="descriptionEn" name="descriptionEn" [required]="kind === 'story'" [(ngModel)]="descriptionEn"></textarea>
             </div>
           </div>
           <p class="admin-note">A blank line in the description starts a new paragraph. The news card shows the first three lines.</p>
@@ -111,12 +130,23 @@
         <div class="admin-form-section">
           <div class="admin-form-row">
             <div>
-              <label for="banner">Banner image {{ editingId() ? '(leave empty to keep the current one)' : '' }}</label>
-              <input #banner id="banner" name="banner" type="file" accept="image/jpeg,image/png,image/webp" [required]="!editingId()" />
+              <label for="banner">
+                Banner image
+                @if (kind === 'story') {
+                  {{ editingId() ? '(leave empty to keep the current one)' : '' }}
+                } @else if (kind === 'video') {
+                  (optional — the YouTube thumbnail is used if empty)
+                } @else {
+                  (optional — a source card is shown if empty)
+                }
+              </label>
+              <input #banner id="banner" name="banner" type="file" accept="image/jpeg,image/png,image/webp" [required]="kind === 'story' && !editingId()" />
             </div>
             <div>
-              <label for="extra">More images</label>
-              <input #extra id="extra" name="extra" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+              @if (kind === 'story') {
+                <label for="extra">More images</label>
+              }
+              <input #extra id="extra" name="extra" type="file" accept="image/jpeg,image/png,image/webp" multiple [hidden]="kind !== 'story'" />
             </div>
           </div>
           @if (images().length) {

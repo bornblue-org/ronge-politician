@@ -50,9 +50,16 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy-data:/data
       - caddy-config:/config
+    networks:
+      - default
+      - web
 
 volumes:
   ronge-pg:
   ronge-uploads:
   caddy-data:
   caddy-config:
+
+networks:
+  web:
+    external: true

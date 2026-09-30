@@ -8,17 +8,7 @@
 <section class="wrap section">
   <div class="sheet-grid three">
     @for (item of result().items; track item.id) {
-      <a class="sheet news-card" [routerLink]="['/news', item.id]">
-        <div class="sheet-frame">
-          <img [src]="item.banner" [alt]="lang.t(item.title)" />
-        </div>
-        <div class="sheet-body">
-          <span class="sheet-date">{{ lang.formatDate(item.date) }}</span>
-          <h3>{{ lang.t(item.title) }}</h3>
-          <p>{{ lang.t(item.description) }}</p>
-          <em>{{ lang.lang() === 'mr' ? 'अधिक वाचा →' : 'Read more →' }}</em>
-        </div>
-      </a>
+      <app-news-card [item]="item" />
     }
   </div>
   @if (pageCount() > 1) {

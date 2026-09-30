@@ -9,7 +9,7 @@ function frames(folder: string, count: number): string[] {
 }
 
 export const profile = {
-  name: { mr: 'प्राचार्य डॉ. बी. पी. रोंगे', en: 'Principal Dr. B. P. Ronge' } satisfies Text,
+  name: { mr: 'प्रा. डॉ. बब्रुवाहन पांडुरंग रोंगे', en: 'Prof. Dr. Babruvahan Pandurang Ronge' } satisfies Text,
   shortName: { mr: 'डॉ. बी. पी. रोंगे', en: 'Dr. B. P. Ronge' } satisfies Text,
   constituency: {
     mr: 'पुणे विभाग शिक्षक मतदारसंघ',
@@ -45,29 +45,29 @@ export const nav: NavItem[] = [
 ];
 
 export const stats: Stat[] = [
-  { value: '३९', label: { mr: 'वर्षे अध्यापन', en: 'Years of teaching' } },
-  { value: '१९९८', label: { mr: 'गोपालपूरला महाविद्यालय', en: 'College begun at Gopalpur' } },
+  { value: '४०', label: { mr: 'वर्षे शिक्षण क्षेत्राचा अनुभव', en: 'Years of experience in education' } },
+  { value: '१९९८', label: { mr: 'स्वेरी, पंढरपूर स्थापना', en: 'SVERI, Pandharpur founded' } },
   { value: '५,०००', label: { mr: 'विद्यार्थी, मुख्य परिसर', en: 'Students on the main campus' } },
-  { value: '५', label: { mr: 'जिल्ह्यांचा मतदारसंघ', en: 'Districts in the constituency' } },
+  { value: '✔', label: { mr: 'शिक्षकांच्या विकासासाठी कटिबद्ध', en: 'Committed to teachers’ development' } },
 ];
 
 export const heroLead: Text = {
-  mr: 'पंढरपूर तालुक्यातील खडकी येथील शेतकरी कुटुंबातून शिक्षण, तंत्रज्ञान आणि शिक्षक चळवळीपर्यंतचा प्रवास. पुणे विभाग शिक्षक मतदारसंघासाठी २०२६ चा कृती आराखडा शिक्षकांच्या सेवासुरक्षा, सन्मान आणि शाळांच्या सुविधांभोवती उभा आहे.',
-  en: 'From a farming family in Khadki, Pandharpur taluka, to engineering education and the teachers’ movement. The 2026 plan for the Pune Division Teachers’ Constituency stands on service security, dignity, and better schools.',
+  mr: 'पंढरपूर तालुक्यातील खर्डी येथील शेतकरी कुटुंबातून शिक्षण, तंत्रज्ञान आणि शिक्षक चळवळीपर्यंतचा प्रवास. पुणे विभाग शिक्षक मतदारसंघासाठी २०२६ चा कृती आराखडा शिक्षकांच्या सेवासुरक्षा, सन्मान आणि शाळांच्या सुविधांभोवती उभा आहे.',
+  en: 'From a farming family in Khardi, Pandharpur taluka, to engineering education and the teachers’ movement. The 2026 plan for the Pune Division Teachers’ Constituency stands on service security, dignity, and better schools.',
 };
 
 export const aboutLead: Text = {
-  mr: 'वीरमाता जिजाबाई टेक्नॉलॉजिकल इन्स्टिट्यूट, मुंबई येथून अभियांत्रिकी पदवी, आयआयटी मुंबई येथून इंडस्ट्रियल मॅनेजमेंटमध्ये एम.टेक., आणि पुण्यश्लोक अहिल्यादेवी होळकर सोलापूर विद्यापीठातून पीएच.डी. मुंबईत नोकरी न करता गावाकडे परतल्यावर त्यांनी १९९८ साली गोपालपूर येथे कार्यशाळेच्या शेडमध्ये अभियांत्रिकी महाविद्यालयाची मुहूर्तमेढ रोवली.',
-  en: 'An engineering degree from VJTI Mumbai, an M.Tech. in Industrial Management from IIT Bombay, and a Ph.D. from Punyashlok Ahilyadevi Holkar Solapur University. He returned home instead of taking a job in Mumbai, and in 1998 started an engineering college in a workshop shed at Gopalpur.',
+  mr: 'वीरमाता जिजाबाई टेक्नॉलॉजिकल इन्स्टिट्यूट, मुंबई येथून अभियांत्रिकी पदवी, आयआयटी मुंबई येथून इंडस्ट्रियल मॅनेजमेंटमध्ये एम.टेक., आणि पुण्यश्लोक अहिल्यादेवी होळकर सोलापूर विद्यापीठातून पीएच.डी. मुंबईत नोकरी न करता गावाकडे परतल्यावर त्यांनी १९९८ साली पंढरपूर येथे कार्यशाळेच्या शेडमध्ये अभियांत्रिकी महाविद्यालयाची मुहूर्तमेढ रोवली.',
+  en: 'An engineering degree from VJTI Mumbai, an M.Tech. in Industrial Management from IIT Bombay, and a Ph.D. from Punyashlok Ahilyadevi Holkar Solapur University. He returned home instead of taking a job in Mumbai, and in 1998 started an engineering college in a workshop shed at Pandharpur.',
 };
 
 export const experience: Text[] = [
   { mr: 'मॅनेजमेंट कौन्सिल सदस्य — तीन टर्म', en: 'Member, Management Council — three terms' },
   { mr: 'सिनेट सदस्य — तीन टर्म', en: 'Member, Senate — three terms' },
-  { mr: 'अॅकॅडेमिक कौन्सिल सदस्य — चार टर्म', en: 'Member, Academic Council — four terms' },
+  { mr: 'ॲकॅडमिक कौन्सिल सदस्य — चार टर्म', en: 'Member, Academic Council — four terms' },
   { mr: 'अभियांत्रिकी विद्याशाखेचे अधिष्ठाता — पाच वर्षे', en: 'Dean, Faculty of Engineering — five years' },
   { mr: 'स्वेरीज कॉलेज ऑफ इंजिनिअरिंग, पंढरपूर येथे प्राचार्य — अध्यापनात बावीस वर्षे', en: 'Principal, SVERI’s College of Engineering, Pandharpur — twenty-two years in teaching there' },
-  { mr: 'अभियांत्रिकी शिक्षकाचा एकूण अनुभव — एकोणचाळीस वर्षे', en: 'Thirty-nine years as an engineering teacher, from assistant professor to professor' },
+  { mr: 'अभियांत्रिकी शिक्षकाचा एकूण अनुभव — चाळीस वर्षे', en: 'Forty years as an engineering teacher, from assistant professor to professor' },
 ];
 
 export const institutions: Text[] = [
@@ -136,7 +136,7 @@ export const universityWork: Text[] = [
   { mr: 'शिक्षकांचे परीक्षा मानधन वाढवण्याच्या प्रक्रियेत सहभाग.', en: 'Worked to raise examination remuneration for teachers.' },
   { mr: '२००५ ते २०१० या काळात अभियांत्रिकी विद्याशाखेचे अधिष्ठाता म्हणून परीक्षा निकाल ३० ते ४५ दिवसांत लावण्यात यश.', en: 'As Dean of Engineering from 2005 to 2010, examination results were declared in 30 to 45 days.' },
   { mr: 'विद्यापीठस्तरीय युवा महोत्सवाचे तीन वेळा प्राचार्य म्हणून आयोजन. क्रीडा स्पर्धांचे सातत्याने आयोजन.', en: 'Director of the university youth festival three times, and a regular organiser of sports competitions.' },
-  { mr: 'शिक्षक प्रशिक्षण परिषदा आणि शिक्षक-विद्यार्थीभिमुख कामकाजासाठी मॅनेजमेंट कौन्सिल, अॅकॅडेमिक कौन्सिल व सिनेटमध्ये सातत्याने सहभाग.', en: 'A continuing voice for teachers and students in the Management Council, Academic Council, and Senate, including teacher-training conferences.' },
+  { mr: 'शिक्षक प्रशिक्षण परिषदा आणि शिक्षक-विद्यार्थीभिमुख कामकाजासाठी मॅनेजमेंट कौन्सिल, ॲकॅडमिक कौन्सिल व सिनेटमध्ये सातत्याने सहभाग.', en: 'A continuing voice for teachers and students in the Management Council, Academic Council, and Senate, including teacher-training conferences.' },
 ];
 
 export const awards: Award[] = [
@@ -172,6 +172,16 @@ export const albums: Album[] = [
     },
     cover: '/media/teachers/09.jpg',
     images: frames('teachers', 32),
+  },
+  {
+    id: 'press',
+    title: { mr: 'वृत्तपत्रातील बातम्या', en: 'In the press' },
+    summary: {
+      mr: 'डॉ. रोंगे सरांच्या शिक्षक भेटी आणि कार्याबद्दल वृत्तपत्रांत प्रसिद्ध झालेल्या बातम्या.',
+      en: 'Newspaper coverage of Dr. Ronge’s teacher visits and work.',
+    },
+    cover: '/media/press/01.jpg',
+    images: frames('press', 15),
   },
 ];
 

@@ -26,6 +26,10 @@ export interface DistrictNote {
 
 export interface NewsItem {
   id: string;
+  /** `story` (default) opens a detail page, `link` opens an outside page, `video` plays YouTube. */
+  kind?: 'story' | 'link' | 'video';
+  link?: string | null;
+  source?: string | null;
   banner: string;
   title: Text;
   description: Text;

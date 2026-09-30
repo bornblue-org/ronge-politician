@@ -1,0 +1,63 @@
+<ng-template #inner>
+  <div class="sheet-frame news-frame">
+    @if (item().banner) {
+      <img [src]="item().banner" [alt]="lang.t(item().title)" />
+    } @else {
+      <div class="news-placeholder" [class]="'news-placeholder ' + sourceClass()">
+        <i [class]="sourceIcon()"></i>
+        <span>{{ item().source }}</span>
+      </div>
+    }
+    @if (kind() !== 'story') {
+      <span class="news-badge" [class]="'news-badge ' + sourceClass()">
+        <i [class]="sourceIcon()"></i>{{ item().source }}
+      </span>
+    }
+    @if (kind() === 'video') {
+      <span class="news-play"><i class="fa-solid fa-play"></i></span>
+    }
+  </div>
+  <div class="sheet-body">
+    <span class="sheet-date">{{ lang.formatDate(item().date) }}</span>
+    <h3>{{ lang.t(item().title) }}</h3>
+    @if (lang.t(item().description)) {
+      <p>{{ lang.t(item().description) }}</p>
+    }
+    <em>
+      @if (kind() === 'video') {
+        {{ lang.lang() === 'mr' ? 'व्हिडिओ पहा →' : 'Watch video →' }}
+      } @else if (kind() === 'link') {
+        {{ lang.lang() === 'mr' ? 'मूळ बातमी वाचा →' : 'Read original →' }}
+      } @else {
+        {{ lang.lang() === 'mr' ? 'अधिक वाचा →' : 'Read more →' }}
+      }
+    </em>
+  </div>
+</ng-template>
+
+@switch (kind()) {
+  @case ('video') {
+    <button type="button" class="sheet news-card" (click)="playing.set(true)">
+      <ng-container *ngTemplateOutlet="inner"></ng-container>
+    </button>
+  }
+  @case ('link') {
+    <a class="sheet news-card" [href]="item().link" target="_blank" rel="noopener noreferrer">
+      <ng-container *ngTemplateOutlet="inner"></ng-container>
+    </a>
+  }
+  @default {
+    <a class="sheet news-card" [routerLink]="['/news', item().id]">
+      <ng-container *ngTemplateOutlet="inner"></ng-container>
+    </a>
+  }
+}
+
+@if (playing() && embedUrl(); as url) {
+  <div class="lightbox" (click)="playing.set(false)">
+    <button type="button" (click)="playing.set(false)">{{ lang.lang() === 'mr' ? 'बंद' : 'Close' }}</button>
+    <div class="video-frame" (click)="$event.stopPropagation()">
+      <iframe [src]="url" [title]="lang.t(item().title)" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+}

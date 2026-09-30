@@ -62,18 +62,19 @@
             <div class="voter-card-drop">
               <div class="voter-card-stage">
                 <div class="voter-card" #cardEl>
-                  <div class="voter-card-head">
+                  <div class="voter-card-hero">
                     <img [src]="profile.portrait" alt="" />
-                    <strong>{{ lang.t(profile.name) }}</strong>
+                    <div class="voter-card-shade"></div>
+                    <div class="voter-card-hero-text">
+                      <span class="voter-card-kicker">{{ lang.lang() === 'mr' ? 'निवडणूक २०२६' : 'Election 2026' }}</span>
+                      <strong>{{ lang.t(profile.name) }}</strong>
+                      <small>{{ lang.t(profile.constituency) }}</small>
+                    </div>
                   </div>
-                  <div class="voter-card-pill">{{ lang.t(profile.constituency) }}</div>
 
                   <div class="voter-card-body">
-                    <span class="voter-card-label">{{ lang.lang() === 'mr' ? 'शिक्षक' : 'Teacher' }}</span>
+                    <span class="voter-card-label">{{ lang.lang() === 'mr' ? 'शिक्षक मतदार' : 'Teacher voter' }}</span>
                     <h3>{{ row.name }}</h3>
-                    @if (row.relativeName) {
-                      <p class="voter-card-relative">{{ row.relativeName }}</p>
-                    }
 
                     <div class="voter-card-stats">
                       <div>
@@ -92,19 +93,25 @@
 
                     @if (row.institute) {
                       <div class="voter-card-line">
-                        <span><i class="fa-solid fa-school"></i>{{ lang.lang() === 'mr' ? 'संस्थेचे नाव' : 'Institute name' }}</span>
-                        <b>{{ row.institute }}</b>
+                        <i class="fa-solid fa-school"></i>
+                        <div>
+                          <span>{{ lang.lang() === 'mr' ? 'संस्थेचे नाव' : 'Institute' }}</span>
+                          <b>{{ row.institute }}</b>
+                        </div>
                       </div>
                     }
                     @if (row.address) {
                       <div class="voter-card-line">
-                        <span><i class="fa-solid fa-location-dot"></i>{{ lang.lang() === 'mr' ? 'पत्ता' : 'Address' }}</span>
-                        <b>{{ row.address }}</b>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>
+                          <span>{{ lang.lang() === 'mr' ? 'पत्ता' : 'Address' }}</span>
+                          <b>{{ row.address }}</b>
+                        </div>
                       </div>
                     }
                   </div>
 
-                  <div class="voter-card-foot">{{ lang.t(profile.slogan) }}</div>
+                  <div class="voter-card-appeal">{{ lang.lang() === 'mr' ? 'आपले बहुमोल मत द्या' : 'Cast your valuable vote' }}</div>
                 </div>
 
                 <div class="voter-card-actions">

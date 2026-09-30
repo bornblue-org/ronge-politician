@@ -204,6 +204,10 @@ h1, h2, h3, p { margin: 0; }
 }
 @keyframes slide { to { transform: translateX(-50%); } }
 
+.hero-banner { background: #cfe3f8; line-height: 0; }
+.hero-banner img { display: block; width: 100%; height: auto; }
+.hero-cta { background: var(--ink); padding: 14px 0; }
+.hero-cta .wrap { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .stage {
   position: relative;
   min-height: 640px;
@@ -776,61 +780,53 @@ textarea { min-height: 130px; resize: vertical; }
 }
 .voter-card-stage { display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .voter-card {
-  width: min(380px, 100%);
-  border-radius: 28px;
+  width: min(320px, 100%);
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--cream);
-  border: 1px solid var(--line);
+  background: #fff;
   box-shadow: var(--shadow);
 }
-.voter-card-head {
-  background: linear-gradient(135deg, var(--ink) 0%, #1d4e89 100%);
-  padding: 28px 20px 40px;
-  text-align: center;
-  color: white;
+.voter-card-hero { position: relative; height: 175px; background: #000; overflow: hidden; }
+.voter-card-hero img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: auto;
 }
-.voter-card-head img {
-  width: 96px;
-  height: 96px;
-  margin: 0 auto 10px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center top;
-  border: 3px solid var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-soft);
+.voter-card-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #0c2340 0%, #0c2340 42%, rgba(12, 35, 64, 0) 72%);
 }
-.voter-card-head strong { display: block; font-size: 1.05rem; }
-.voter-card-pill {
-  width: fit-content;
-  margin: -18px auto 0;
+.voter-card-hero-text { position: absolute; left: 14px; top: 0; bottom: 0; width: 52%; display: flex; flex-direction: column; justify-content: center; color: #fff; text-align: left; }
+.voter-card-kicker {
+  align-self: flex-start;
   background: var(--gold);
   color: var(--ink);
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 7px 16px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
   border-radius: 999px;
-  text-align: center;
-  position: relative;
+  margin-bottom: 8px;
 }
-.voter-card-body { padding: 26px 22px 18px; text-align: center; }
-.voter-card-label { color: var(--orange); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
-.voter-card-body h3 { font-size: 1.4rem; color: var(--ink); margin: 4px 0 2px; }
-.voter-card-relative { color: var(--muted); font-size: 0.88rem; margin-bottom: 16px; }
-.voter-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0; }
-.voter-card-stats div { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 10px 6px; }
-.voter-card-stats span { display: block; color: var(--orange); font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; }
-.voter-card-stats b { color: var(--ink); font-size: 0.94rem; }
-.voter-card-line {
-  text-align: left;
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 10px 14px;
-  margin-bottom: 10px;
-}
-.voter-card-line span { display: flex; align-items: center; gap: 6px; color: var(--orange); font-size: 0.72rem; font-weight: 700; margin-bottom: 3px; }
-.voter-card-line b { color: var(--ink); font-size: 0.9rem; line-height: 1.4; font-weight: 600; }
-.voter-card-foot { background: #0c2340; color: var(--gold-soft); text-align: center; padding: 14px 18px; font-size: 0.82rem; line-height: 1.5; }
+.voter-card-hero-text strong { display: block; font-size: 0.98rem; line-height: 1.3; }
+.voter-card-hero-text small { display: block; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--gold); color: var(--gold-soft); font-size: 0.68rem; line-height: 1.35; }
+.voter-card-body { padding: 10px 14px 10px; text-align: left; border-top: 4px solid var(--gold); }
+.voter-card-label { color: var(--orange); font-size: 0.66rem; font-weight: 800; letter-spacing: 0.08em; }
+.voter-card-body h3 { font-size: 1.12rem; line-height: 1.3; color: var(--ink); margin: 2px 0 2px; }
+.voter-card-stats { display: flex; margin: 8px 0 4px; padding: 6px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.voter-card-stats div { flex: 1; text-align: center; }
+.voter-card-stats div + div { border-left: 1px solid var(--line); }
+.voter-card-stats span { display: block; color: var(--muted); font-size: 0.62rem; font-weight: 700; margin-bottom: 2px; }
+.voter-card-stats b { color: var(--ink); font-size: 0.92rem; }
+.voter-card-line { display: flex; align-items: flex-start; gap: 10px; margin-top: 6px; padding: 6px 10px; background: var(--cream); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; }
+.voter-card-line i { flex: none; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; background: var(--ink); color: var(--gold-soft); font-size: 0.78rem; }
+.voter-card-line div { min-width: 0; }
+.voter-card-line span { display: block; color: var(--orange); font-size: 0.64rem; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 2px; }
+.voter-card-line b { display: block; color: var(--ink); font-size: 0.84rem; line-height: 1.4; font-weight: 700; }
+.voter-card-appeal { background: var(--orange); color: #fff; text-align: center; padding: 7px 12px; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.03em; }
 .voter-card-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .voter-card-actions .btn-ghost {
   background: white;
@@ -1480,3 +1476,31 @@ textarea { min-height: 130px; resize: vertical; }
   .admin-avatar-btn .admin-avatar-label { display: none; }
   .admin-detail-body { padding-left: 12px; }
 }
+
+/* ---------- News cards: link / video / story ---------- */
+app-news-card { display: flex; }
+app-news-card > .sheet { flex: 1; width: 100%; text-align: left; font: inherit; cursor: pointer; }
+button.news-card { padding: 0; }
+.news-frame { position: relative; }
+.news-badge {
+  position: absolute; left: 10px; top: 10px; display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 0.72rem; font-weight: 700;
+}
+.news-badge.facebook { background: #1877f2; }
+.news-badge.youtube { background: #e11d1d; }
+.news-badge.instagram { background: #c13584; }
+.news-play {
+  position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: rgba(225, 29, 29, 0.92); color: #fff; font-size: 1.1rem;
+  padding-left: 3px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.news-placeholder {
+  height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--ink), #1d4e89); color: #fff; font-weight: 700;
+}
+.news-placeholder i { font-size: 2.4rem; }
+.news-placeholder.facebook { background: linear-gradient(135deg, #1877f2, #0c4fb3); }
+.news-placeholder.youtube { background: linear-gradient(135deg, #e11d1d, #8f1010); }
+.news-placeholder.instagram { background: linear-gradient(135deg, #c13584, #e1306c, #f77737); }
+.video-frame { width: min(960px, 100%); aspect-ratio: 16 / 9; }
+.video-frame iframe { width: 100%; height: 100%; border: 0; border-radius: 12px; background: #000; }

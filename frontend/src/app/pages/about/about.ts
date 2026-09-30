@@ -16,7 +16,7 @@ export class About {
     { title: { mr: 'शैक्षणिक संस्था', en: 'Institutions' }, items: institutions },
     { title: { mr: 'परिसराची वाटचाल', en: 'How the campus grew' }, items: campus },
     { title: { mr: 'सामाजिक कार्य', en: 'Social work' }, items: socialWork },
-    { title: { mr: 'विद्यापीठ कामकाज', en: 'University work' }, items: universityWork },
+    { title: { mr: 'शिक्षण क्षेत्रातील कार्य', en: 'Work in the education sector' }, items: universityWork },
   ];
   readonly awards = awards;
 }

@@ -19,6 +19,8 @@ export class AdminNews {
   readonly editingId = signal<string | null>(null);
   readonly images = signal<string[]>([]);
   readonly saving = signal(false);
+  kind: 'story' | 'link' | 'video' = 'story';
+  link = '';
   titleMr = '';
   titleEn = '';
   descriptionMr = '';
@@ -45,6 +47,8 @@ export class AdminNews {
 
   openAdd(): void {
     this.editingId.set(null);
+    this.kind = 'story';
+    this.link = '';
     this.titleMr = '';
     this.titleEn = '';
     this.descriptionMr = '';
@@ -56,6 +60,8 @@ export class AdminNews {
 
   openEdit(item: NewsItem): void {
     this.editingId.set(item.id);
+    this.kind = item.kind ?? 'story';
+    this.link = item.link ?? '';
     this.titleMr = item.title.mr;
     this.titleEn = item.title.en;
     this.descriptionMr = item.description.mr;
@@ -72,6 +78,8 @@ export class AdminNews {
   saveStory(event: Event, bannerInput: HTMLInputElement, imagesInput: HTMLInputElement): void {
     event.preventDefault();
     const data = new FormData();
+    data.set('kind', this.kind);
+    data.set('link', this.link);
     data.set('titleMr', this.titleMr);
     data.set('titleEn', this.titleEn);
     data.set('descriptionMr', this.descriptionMr);

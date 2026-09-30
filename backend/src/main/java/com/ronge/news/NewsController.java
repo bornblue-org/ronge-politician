@@ -38,20 +38,23 @@ public class NewsController {
 
   @PostMapping("/admin/news")
   NewsResponse create(
+      @RequestParam(defaultValue = "story") String kind,
+      @RequestParam(required = false) String link,
       @RequestParam String titleMr,
       @RequestParam String titleEn,
-      @RequestParam String descriptionMr,
-      @RequestParam String descriptionEn,
+      @RequestParam(required = false) String descriptionMr,
+      @RequestParam(required = false) String descriptionEn,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-      @RequestParam MultipartFile banner,
+      @RequestParam(required = false) MultipartFile banner,
       @RequestParam(required = false) List<MultipartFile> images
   ) throws IOException {
-    return news.create(titleMr, titleEn, descriptionMr, descriptionEn, date, banner, images);
+    return news.create(kind, link, titleMr, titleEn, descriptionMr, descriptionEn, date, banner, images);
   }
 
   @PutMapping("/admin/news/{id}")
   NewsResponse update(
       @PathVariable String id,
+      @RequestParam(required = false) String link,
       @RequestParam(required = false) String titleMr,
       @RequestParam(required = false) String titleEn,
       @RequestParam(required = false) String descriptionMr,
@@ -60,7 +63,7 @@ public class NewsController {
       @RequestParam(required = false) MultipartFile banner,
       @RequestParam(required = false) List<MultipartFile> images
   ) throws IOException {
-    return news.update(id, titleMr, titleEn, descriptionMr, descriptionEn, date, banner, images);
+    return news.update(id, link, titleMr, titleEn, descriptionMr, descriptionEn, date, banner, images);
   }
 
   @DeleteMapping("/admin/news/{id}")

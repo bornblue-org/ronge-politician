@@ -1,14 +1,14 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { NewsService } from '../../core/news.service';
 import { LanguageService } from '../../core/language.service';
+import { NewsCard } from '../../shared/news-card';
 import { NewsPage } from '../../data/types';
 
 @Component({
   selector: 'app-news-list',
-  imports: [RouterLink],
+  imports: [NewsCard],
   templateUrl: './news-list.html',
 })
 export class NewsList {

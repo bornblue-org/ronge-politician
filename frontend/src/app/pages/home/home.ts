@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { NewsService } from '../../core/news.service';
+import { NewsCard } from '../../shared/news-card';
 import { LanguageService } from '../../core/language.service';
 import { districts } from '../../data/manifesto';
 import { albums, heroLead, profile, stats, voterDistricts } from '../../data/site';
@@ -9,7 +10,7 @@ import { manifestoPoints } from '../../data/manifesto';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [NewsCard, RouterLink],
   templateUrl: './home.html',
 })
 export class Home {

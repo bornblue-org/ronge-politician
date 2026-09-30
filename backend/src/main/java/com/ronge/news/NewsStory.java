@@ -28,6 +28,10 @@ public class NewsStory {
   @Column(columnDefinition = "text")
   private String descriptionEn;
   private String banner;
+  private String kind = "story";
+  @Column(columnDefinition = "text")
+  private String linkUrl;
+  private String source;
   private LocalDate storyDate;
   private Instant createdAt;
 
@@ -52,6 +56,12 @@ public class NewsStory {
   public void setDescriptionEn(String descriptionEn) { this.descriptionEn = descriptionEn; }
   public String getBanner() { return banner; }
   public void setBanner(String banner) { this.banner = banner; }
+  public String getKind() { return kind; }
+  public void setKind(String kind) { this.kind = kind; }
+  public String getLinkUrl() { return linkUrl; }
+  public void setLinkUrl(String linkUrl) { this.linkUrl = linkUrl; }
+  public String getSource() { return source; }
+  public void setSource(String source) { this.source = source; }
   public LocalDate getStoryDate() { return storyDate; }
   public void setStoryDate(LocalDate storyDate) { this.storyDate = storyDate; }
   public Instant getCreatedAt() { return createdAt; }

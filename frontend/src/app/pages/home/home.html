@@ -1,22 +1,11 @@
-<section class="stage">
-  <div class="stage-shade"></div>
-  <div class="wrap stage-grid">
-    <div class="stage-copy">
-      <div class="pill">{{ lang.lang() === 'mr' ? 'निवडणूक २०२६' : 'Election 2026' }}</div>
-      <p class="stage-kicker">{{ lang.t(profile.constituency) }}</p>
-      <h2>{{ lang.t(profile.name) }}</h2>
-      <p class="stage-lead">{{ lang.t(lead) }}</p>
-      <div class="actions">
-        <a class="btn btn-primary" routerLink="/voters">{{ lang.lang() === 'mr' ? 'मतदार यादी' : 'Voter list' }}</a>
-        <a class="btn btn-ghost" routerLink="/election">{{ lang.lang() === 'mr' ? 'कृती आराखडा २०२६' : 'Action plan 2026' }}</a>
-      </div>
-    </div>
-    <figure class="stage-portrait">
-      <img [src]="profile.portrait" [alt]="lang.t(profile.name)" />
-      <figcaption>
-        <strong>{{ lang.t(profile.name) }}</strong>
-      </figcaption>
-    </figure>
+<section class="hero-banner">
+  <img src="/media/hero-banner.jpg" [alt]="lang.lang() === 'mr' ? 'आपला ज्ञानयात्री — ' + lang.t(profile.name) : 'Aapla Dnyanyatri — ' + lang.t(profile.name)" />
+</section>
+
+<section class="hero-cta">
+  <div class="wrap">
+    <a class="btn btn-primary" routerLink="/voters">{{ lang.lang() === 'mr' ? 'मतदार यादी' : 'Voter list' }}</a>
+    <a class="btn btn-ghost" routerLink="/election">{{ lang.lang() === 'mr' ? 'कृती आराखडा २०२६' : 'Action plan 2026' }}</a>
   </div>
 </section>
 
@@ -27,7 +16,7 @@
         <h2>{{ lang.lang() === 'mr' ? 'आपल्या जिल्ह्याच्या मतदार यादीत नाव शोधा' : 'Find your name in your district voter list' }}</h2>
         <p>{{ lang.lang() === 'mr' ? 'पुणे, कोल्हापूर, सांगली, सातारा व सोलापूर जिल्ह्यातील शिक्षक मतदार' : 'Teacher voters in Pune, Kolhapur, Sangli, Satara, and Solapur' }}</p>
       </div>
-      <a class="more" routerLink="/voters">{{ lang.lang() === 'mr' ? 'यादी शोधा →' : 'Search the list →' }}</a>
+      <a class="more" routerLink="/voters">{{ lang.lang() === 'mr' ? 'यादीमध्ये नाव शोधा →' : 'Find your name in the list →' }}</a>
     </div>
     <div class="voter-tiles">
       @for (district of voterDistricts; track district.id) {
@@ -124,17 +113,7 @@
     </div>
     <div class="sheet-grid three">
       @for (item of news().items; track item.id) {
-        <a class="sheet news-card" [routerLink]="['/news', item.id]">
-          <div class="sheet-frame">
-            <img [src]="item.banner" [alt]="lang.t(item.title)" />
-          </div>
-          <div class="sheet-body">
-            <span class="sheet-date">{{ lang.formatDate(item.date) }}</span>
-            <h3>{{ lang.t(item.title) }}</h3>
-            <p>{{ lang.t(item.description) }}</p>
-            <em>{{ lang.lang() === 'mr' ? 'अधिक वाचा →' : 'Read more →' }}</em>
-          </div>
-        </a>
+        <app-news-card [item]="item" />
       }
     </div>
   </div>

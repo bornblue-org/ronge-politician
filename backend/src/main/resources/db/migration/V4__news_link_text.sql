@@ -1,0 +1,1 @@
+ALTER TABLE news_story ALTER COLUMN link_url TYPE TEXT;
