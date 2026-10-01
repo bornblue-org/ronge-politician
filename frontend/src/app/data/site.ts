@@ -52,7 +52,7 @@ export const stats: Stat[] = [
 ];
 
 export const heroLead: Text = {
-  mr: 'पंढरपूर तालुक्यातील खर्डी येथील शेतकरी कुटुंबातून शिक्षण, तंत्रज्ञान आणि शिक्षक चळवळीपर्यंतचा प्रवास. पुणे विभाग शिक्षक मतदारसंघासाठी २०२६ चा कृती आराखडा शिक्षकांच्या सेवासुरक्षा, सन्मान आणि शाळांच्या सुविधांभोवती उभा आहे.',
+  mr: 'पंढरपूर तालुक्यातील खर्डी येथील शेतकरी कुटुंबातून शिक्षण, तंत्रज्ञान आणि शिक्षक चळवळीपर्यंतचा प्रवास. पुणे विभाग शिक्षक मतदारसंघासाठी २०२६ चा जाहिरनामा शिक्षकांच्या सेवासुरक्षा, सन्मान आणि शाळांच्या सुविधांभोवती उभा आहे.',
   en: 'From a farming family in Khardi, Pandharpur taluka, to engineering education and the teachers’ movement. The 2026 plan for the Pune Division Teachers’ Constituency stands on service security, dignity, and better schools.',
 };
 
