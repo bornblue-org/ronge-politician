@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -196,10 +197,10 @@ public class VoterService {
   @Transactional(readOnly = true)
   public VoterSearch searchPublic(String name, String district) {
     String query = name == null ? "" : name.trim();
-    if (query.length() < 2) {
+    if (Arrays.stream(query.split("\\s+")).noneMatch(word -> word.length() >= 2)) {
       throw new IllegalArgumentException("Type at least two letters of the name");
     }
-    Page<Voter> page = voters.search(blankToNull(district), null, query, PageRequest.of(0, 30));
+    Page<Voter> page = voters.searchByWordPrefix(blankToNull(district), null, query, PageRequest.of(0, 30));
     List<PublicVoter> items = page.getContent().stream().map(PublicVoter::from).toList();
     return new VoterSearch(items, page.getTotalElements());
   }
