@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * a repeating header with district and part, nine columns, and one elector per serial number.
  */
 public class RollPdfParser {
-  private static final Pattern PART_HEADING = Pattern.compile("District:\\s*([A-Za-z]+).*?Part:\\s*(\\d+)", Pattern.CASE_INSENSITIVE);
+  private static final Pattern PART_HEADING = Pattern.compile("District:\\s*([A-Za-z]+).*?Part(?:\\s*No\\.?)?\\s*:?\\s*(\\d+)", Pattern.CASE_INSENSITIVE);
   private static final List<String> COLUMN_INDEX = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
   public List<ParsedVoter> parse(Path pdf) throws IOException {
@@ -45,6 +45,7 @@ public class RollPdfParser {
     String part = "";
     float[] columns = null;
     boolean inTable = false;
+    int otherLayoutColumns = 0;
     Row current = null;
 
     for (Line line : lines) {
@@ -54,8 +55,12 @@ public class RollPdfParser {
         district = normalizeDistrict(heading.group(1));
         part = heading.group(2);
       }
-      List<Word> indexWords = line.words.stream().filter(word -> word.text.matches("[1-9]")).toList();
-      if (indexWords.size() == 9 && indexWords.stream().map(word -> word.text).toList().equals(COLUMN_INDEX)) {
+      List<Word> indexWords = columnIndexWords(line);
+      if (indexWords != null && indexWords.size() != COLUMN_INDEX.size()) {
+        otherLayoutColumns = indexWords.size();
+        continue;
+      }
+      if (indexWords != null) {
         columns = new float[indexWords.size()];
         for (int index = 0; index < indexWords.size(); index++) {
           columns[index] = indexWords.get(index).x;
@@ -70,7 +75,8 @@ public class RollPdfParser {
         inTable = false;
         continue;
       }
-      if (text.contains("Elector Name") || text.contains("Maharashtra") || text.contains("Qualify Date")) {
+      if (text.contains("Elector Name") || text.contains("Maharashtra") || text.contains("Qualify Date")
+          || text.startsWith("Shifted to")) {
         continue;
       }
       if (current == null && !hasSerial(line, columns)) {
@@ -92,9 +98,26 @@ public class RollPdfParser {
       add(voters, current, district, part);
     }
     if (voters.isEmpty()) {
-      throw new IllegalArgumentException("No voter rows were found. Upload a roll PDF in the same layout as PART220.");
+      if (otherLayoutColumns == 10) {
+        throw new IllegalArgumentException("This looks like a graduates' roll (10 columns: qualification and occupation). "
+            + "This site reads teachers' rolls (9 columns, with the institute).");
+      }
+      throw new IllegalArgumentException("No voter rows were found. Upload a teachers' roll PDF (9 columns, with the institute).");
     }
     return voters;
+  }
+
+  /** The index row under the headings is "1 2 3 ..." with one number per column and nothing else on the line. */
+  private List<Word> columnIndexWords(Line line) {
+    if (line.words.size() < COLUMN_INDEX.size()) {
+      return null;
+    }
+    for (int index = 0; index < line.words.size(); index++) {
+      if (!line.words.get(index).text.equals(String.valueOf(index + 1))) {
+        return null;
+      }
+    }
+    return line.words;
   }
 
   private void add(List<ParsedVoter> voters, Row row, String district, String part) {
@@ -130,18 +153,23 @@ public class RollPdfParser {
     return word.text.matches("\\d{1,4}") && Math.abs(word.x - columns[0]) < 36;
   }
 
-  /** Header numbers sit toward the middle of each column, so data is matched to the nearest header except the serial. */
+  /**
+   * Header numbers are centred over their columns while data is left-aligned, so each column's left edge is the
+   * mirror of the previous edge about that centre; the first edge is estimated from the gap to the second column.
+   */
   private int columnOf(Word word, float[] columns) {
-    int best = 1;
-    float bestDistance = Math.abs(word.x - columns[1]);
+    float[] edges = new float[columns.length];
+    edges[0] = columns[0] - (columns[1] - columns[0]) * 0.2f;
+    for (int index = 1; index < columns.length; index++) {
+      edges[index] = 2 * columns[index - 1] - edges[index - 1];
+    }
+    int column = 1;
     for (int index = 2; index < columns.length; index++) {
-      float distance = Math.abs(word.x - columns[index]);
-      if (distance < bestDistance) {
-        best = index;
-        bestDistance = distance;
+      if (word.x >= edges[index] - 3f) {
+        column = index;
       }
     }
-    return best;
+    return column;
   }
 
   private String extractEpic(Row row) {
@@ -203,6 +231,8 @@ public class RollPdfParser {
       }
       line.words.add(word);
     }
+    // Words on one visual line can differ slightly in baseline, so read them left to right.
+    lines.forEach(line -> line.words.sort(Comparator.comparingDouble((Word word) -> word.x)));
     return lines;
   }
 
@@ -267,14 +297,37 @@ public class RollPdfParser {
   }
 
   private static final class WordStripper extends PDFTextStripper {
+    private static final float BASELINE_TOLERANCE = 2f;
     final List<Word> words = new ArrayList<>();
 
     WordStripper() throws IOException {
       super();
     }
 
+    /** A cell that overflows into the next row puts characters from two baselines in one run; split them so they never interleave. */
     @Override
     protected void writeString(String text, List<TextPosition> positions) {
+      List<List<TextPosition>> baselines = new ArrayList<>();
+      for (TextPosition position : positions) {
+        List<TextPosition> target = null;
+        for (List<TextPosition> candidate : baselines) {
+          if (Math.abs(candidate.get(0).getYDirAdj() - position.getYDirAdj()) <= BASELINE_TOLERANCE) {
+            target = candidate;
+            break;
+          }
+        }
+        if (target == null) {
+          target = new ArrayList<>();
+          baselines.add(target);
+        }
+        target.add(position);
+      }
+      for (List<TextPosition> baseline : baselines) {
+        writeBaseline(baseline);
+      }
+    }
+
+    private void writeBaseline(List<TextPosition> positions) {
       StringBuilder token = new StringBuilder();
       float startX = 0;
       float y = 0;
